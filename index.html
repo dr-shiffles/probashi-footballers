@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probashi Footballers - Explore the global pipeline of talent for Bangladesh.</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                Probashi Footballers
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="index.html" class="nav-link">
+                       Men
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="women.html" class="nav-link">
+                        Women
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">
+                        About
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Tracking the global pipeline of Bangladeshi football talent</h1>
+        </header>
+        <h2 class="gender">Men's Team Players</h2>
+        <p class="body-text">This page contains the list of Male Bangladeshi-origin players. Use the filter options below to filter players to your liking. <br /></p>
+        <div class="controls">
+            <div class="filter-group">
+                <label for="nameFilter"><i class="fas fa-user"></i> Name:</label>
+                <input type="text" id="nameFilter" placeholder="Search by name...">
+                
+                <label for="positionFilter"><i class="fas fa-map-marker-alt"></i> Position:</label>
+                <select id="positionFilter">
+                    <option value="">All Positions</option>
+                </select>
+                
+                <label for="birthYearFilter"><i class="fas fa-calendar"></i> Birth Year:</label>
+                <select id="birthYearFilter">
+                    <option value="">All Years</option>
+                </select>
+                
+                <label for="countryFilter"><i class="fas fa-globe"></i> Country:</label>
+                <select id="countryFilter">
+                    <option value="">All Countries</option>
+                </select>
+                
+                <button id="resetFilters" class="reset-btn">
+                    <i class="fas fa-redo"></i> Reset Filters
+                </button>
+            </div>
+            
+            <div class="table-info">
+                <span id="rowCount">Loading...</span>
+                <div class="pagination-controls">
+                    <button id="prevPage" class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span id="pageInfo">Page 1 of 1</span>
+                    <button id="nextPage" class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="playersTable">
+                <thead>
+                    <tr>
+                        <th>Given Names</th>
+                        <th>Last Name</th>
+                        <th>Positions</th>
+                        <th>Birth Year</th>
+                        <th>Birth Date</th>
+                        <th>Age</th>
+                        <th>Birthplace</th>
+                        <th>Citizenship</th>
+                        <th>Club Name</th>
+                        <th>Country</th>
+                        <th>Tier</th>
+                        <th>Notes</th>
+                        <th>NT</th>
+                        <th>Tier</th>
+                        <th>Caps</th>
+                        <th>Goals</th>
+                        <th>Last Update</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        <p id="lastUpdateInfo">Data last updated: <span id="lastUpdate"></span></p>
+        <footer>
+            <p>© 2025-2026 Probashi-Footballers.com</p>
+            <p>Made with ♥ in Canada & USA</p>
+            <p>For the best experience, please open the website on a large screen</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Load men's data
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadCSVData('data/mens.csv');
+            setupEventListeners();
+            
+            // Mobile menu toggle
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
