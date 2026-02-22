@@ -17,6 +17,8 @@ The database is compiled from following sources:
 4. Social media posts and accounts
 5. Community submissions from supporters
 
+# Want to Contribute?
+If you want to help contribute to the database by providing new player information, existing player updates, etc; please feel free to send me a DM on Twitter/X (@dr_shiffles). Or, since we're on GitHub, I guess you can do a pull request? Idk, I'm not sure GitHub was originally intended as a way to do version control on a bunch of .csv files, but it's working for me, so I think you could do a pull-request. 
 
 # AI Usage Disclaimer
 This website was created in part with AI/LLM tools such as DeepSeek and ChatGPT, to aid with the presentation of the data on the web.
