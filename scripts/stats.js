@@ -101,6 +101,16 @@ function getPlayerCountry(player) {
     return player[9] || 'Unknown';
 }
 
+// Extract club name from player data (column index 8)
+function getPlayerClub(player) {
+    return player[8] || '';
+}
+
+// Extract NT from player data (column index 12)
+function getPlayerNT(player) {
+    return player[12] || '';
+}
+
 // Extract position from player data (column index 2) - HANDLES MULTIPLE POSITIONS
 function getPlayerPositions(player) {
     const positionField = player[2] || '';
@@ -126,7 +136,7 @@ function categorizePosition(position) {
     return 'Other';
 }
 
-// Calculate statistics - UPDATED TO HANDLE MULTIPLE POSITIONS PER PLAYER
+// Calculate statistics - UPDATED WITH CORRECT CLUB STATUS AND NT CALLUPS
 function calculateStats(data) {
     const stats = {
         total: data.length,
@@ -139,6 +149,15 @@ function calculateStats(data) {
             'Goalkeepers': 0,
             'Other': 0,
             'Unknown': 0
+        },
+        clubStatus: {
+            'With Club': 0,
+            'Without Club': 0
+        },
+        ntCallups: {
+            'Bangladesh': 0,
+            'Other Countries': 0,
+            'No NT': 0
         }
     };
 
@@ -147,6 +166,29 @@ function calculateStats(data) {
         const country = getPlayerCountry(player);
         if (country && country !== '-') {
             stats.countries.add(country);
+        }
+
+        // Club Status - Check if Club Name column is exactly "Unattached"
+        const club = getPlayerClub(player);
+        if (club === 'Unattached') {
+            stats.clubStatus['Without Club']++;
+        } else if (club && club !== '-' && club !== '') {
+            stats.clubStatus['With Club']++;
+        } else {
+            // If club field is empty or '-', count as without club
+            stats.clubStatus['Without Club']++;
+        }
+
+        // NT Callups - Check NT column
+        const nt = getPlayerNT(player);
+        if (nt === 'BAN') {
+            stats.ntCallups['Bangladesh']++;
+        } else if (nt && nt !== '-' && nt !== '') {
+            // Any non-empty, non-BAN value means called up by another country
+            stats.ntCallups['Other Countries']++;
+        } else {
+            // '-' or empty means no callups yet
+            stats.ntCallups['No NT']++;
         }
 
         // Get all positions for this player
@@ -198,6 +240,19 @@ function displayStats() {
     document.getElementById('menCountries').textContent = menStats.countries.size.toLocaleString();
     document.getElementById('womenCountries').textContent = womenStats.countries.size.toLocaleString();
 
+    // Update club status
+    document.getElementById('menWithClub').textContent = menStats.clubStatus['With Club'].toLocaleString();
+    document.getElementById('menWithoutClub').textContent = menStats.clubStatus['Without Club'].toLocaleString();
+    document.getElementById('womenWithClub').textContent = womenStats.clubStatus['With Club'].toLocaleString();
+    document.getElementById('womenWithoutClub').textContent = womenStats.clubStatus['Without Club'].toLocaleString();
+
+    // Update NT callups
+    document.getElementById('menNTBangladesh').textContent = menStats.ntCallups['Bangladesh'].toLocaleString();
+    document.getElementById('menNTOther').textContent = menStats.ntCallups['Other Countries'].toLocaleString();
+    document.getElementById('menNTNone').textContent = menStats.ntCallups['No NT'].toLocaleString();
+    document.getElementById('womenNTBangladesh').textContent = womenStats.ntCallups['Bangladesh'].toLocaleString();
+    document.getElementById('womenNTOther').textContent = womenStats.ntCallups['Other Countries'].toLocaleString();
+    document.getElementById('womenNTNone').textContent = womenStats.ntCallups['No NT'].toLocaleString();
 
     // Update position table
     const positionRows = {
