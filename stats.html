@@ -46,7 +46,7 @@
         </div>
     </nav>
 
- <div class="container stats-container">
+    <div class="container stats-container">
         <header>
             <h1>Player Statistics</h1>
             <p>Statistics based on players in the database. Last updated: <span id="statsUpdated"></span></p>
@@ -59,7 +59,7 @@
             <p>Loading player data...</p>
         </div>
 
-        <!-- Side-by-side sections -->
+        <!-- First Row: Total Counts and Countries Represented -->
         <div class="stats-row">
             <!-- Total Counts Section -->
             <div class="stats-section">
@@ -91,6 +91,90 @@
                         <h3>Women</h3>
                         <div class="stat-number" id="womenCountries">0</div>
                         <div class="stat-label">countries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row: Club Status -->
+        <div class="stats-row">
+            <!-- Men's Club Status -->
+            <div class="stats-section">
+                <h2 class="section-title">Men's Club Status</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>With Club</h3>
+                        <div class="stat-number" id="menWithClub">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Without Club</h3>
+                        <div class="stat-number" id="menWithoutClub">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Women's Club Status -->
+            <div class="stats-section">
+                <h2 class="section-title">Women's Club Status</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>With Club</h3>
+                        <div class="stat-number" id="womenWithClub">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Without Club</h3>
+                        <div class="stat-number" id="womenWithoutClub">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third Row: NT Callups -->
+        <div class="stats-row">
+            <!-- Men's NT Callups -->
+            <div class="stats-section">
+                <h2 class="section-title">Men's National Team Callups</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>Bangladesh</h3>
+                        <div class="stat-number" id="menNTBangladesh">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Other Countries</h3>
+                        <div class="stat-number" id="menNTOther">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>No Callups</h3>
+                        <div class="stat-number" id="menNTNone">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Women's NT Callups -->
+            <div class="stats-section">
+                <h2 class="section-title">Women's National Team Callups</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>Bangladesh</h3>
+                        <div class="stat-number" id="womenNTBangladesh">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Other Countries</h3>
+                        <div class="stat-number" id="womenNTOther">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>No Callups</h3>
+                        <div class="stat-number" id="womenNTNone">0</div>
+                        <div class="stat-label">players</div>
                     </div>
                 </div>
             </div>
@@ -146,6 +230,7 @@
         <footer>
             <p>© 2025-2026 Probashi-Footballers.com | Made with ♥ in Canada & USA | For the best experience, please open the website on a large screen.</p>
         </footer>
+    </div>
 
     <script src="scripts/stats.js"></script>
     <script>
