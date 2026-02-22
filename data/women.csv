@@ -1,23 +1,12 @@
 Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Country,Tier,Notes,NT,Tier,Caps,Gls.,Last Update,Sorting String
 Surin,Atik,??,??,??,??,??,AUS,Melbourne University SC,AUS,College,DOB and position unknown,-,-,-,-,11/25/2025,"AUS,Atik,Surin,Melbourne University SC"
-Sanjida,Akhter,"RW, CAM",2001,03/20,24,"Dhobaura, Mymensingh, Bangladesh",,Thimpu City,BHU,1,,BAN,Senior,31,1,10/11/2025,"BHU,Akhter,Sanjida,Thimpu City"
-Shaheda,Akter Ripa,CAM,2005,12/08,20,Bangladesh,-,Royal Thimpu College,BHU,1,Birth city unknown,BAN,Senior,20,1,10/11/2025,"BHU,Akter Ripa,Shaheda,Royal Thimpu College"
-Monika,Chakma,MF,2003,09/15,22,"Khagrachhari, Chattogram, Bangladesh",-,Paro FC,BHU,1,Need to figure out exact position,BAN,Senior,37,4,10/11/2025,"BHU,Chakma,Monika,Paro FC"
-Ritu Porna,Chakma,"LW, RW, CAM",2003,12/30,22,"Rangamati, Chittagong, Bangladesh",-,Paro FC,BHU,1,,BAN,Senior,33,13,10/11/2025,"BHU,Chakma,Ritu Porna,Paro FC"
-Rupna,Chakma,GK,2004,01/02,22,"Rangamati, Chittagong, Bangladesh",-,Transport United,BHU,1,,BAN,Senior,37,0,10/11/2025,"BHU,Chakma,Rupna,Transport United"
-Shamsunnahar,Junior,FW,2004,03/30,21,Bangladesh,-,Royal Thimpu College,BHU,1,Birth city unknown,BAN,Senior,29,8,10/11/2025,"BHU,Junior,Shamsunnahar,Royal Thimpu College"
-Afeida,Khandaker Pranti,CB,2006,11/18,19,"Satkhira, Khulna, Bangladesh",-,Royal Thimpu College,BHU,1,,BAN,Senior,24,4,10/11/2025,"BHU,Khandaker Pranti,Afeida,Royal Thimpu College"
-Sabina,Khatun,ST,1993,10/25,32,"Satkhira, Khulna, Bangladesh",,Paro FC,BHU,1,,BAN,Senior,61,38,10/11/2025,"BHU,Khatun,Sabina,Paro FC"
-Tohura,Khatun,ST,2003,05/05,22,"Kolsindur, Mymensingh, Bangladesh",-,Royal Thimpu College,BHU,1,,BAN,Senior,31,15,10/11/2025,"BHU,Khatun,Tohura,Royal Thimpu College"
-Maria,Manda Sangma,MF,2003,05/10,22,"Dhobaura, Mymensingh, Bangladesh",-,Thimpu City,BHU,1,Need to figure out exact position,BAN,Senior,44,0,10/11/2025,"BHU,Manda Sangma,Maria,Thimpu City"
-Sumaya,Matsushima,ST,2001,02/15,24,"Nagoya, Japan",JPN,Paro FC,BHU,1,10 appearances for Bangladesh. Father is Bangladeshi,BAN,Senior,10,1,10/11/2025,"BHU,Matsushima,Sumaya,Paro FC"
-Shamsun,Nahar,LB,2003,01/31,23,"Dhobaura, Mymensingh, Bangladesh",-,Thimpu City,BHU,1,,BAN,Senior,45,0,10/11/2025,"BHU,Nahar,Shamsun,Thimpu City"
-Masura,Parvin,CB,2001,10/17,24,"Satkhira, Khulna, Bangladesh",,Transport United,BHU,1,,BAN,Senior,44,3,10/11/2025,"BHU,Parvin,Masura,Transport United"
-Sapna,Rani,MF,2006,05/09,19,"Thakurgaon, Rangpur, Bangladesh",-,Royal Thimpu College,BHU,1,Need to figure out exact position,BAN,Senior,22,1,10/11/2025,"BHU,Rani,Sapna,Royal Thimpu College"
-Srimoti Krishna Rani,Sarkar,FW,2001,01/01,25,"Gopalpur, Tangail, Bangladesh",-,Transport United,BHU,1,Need to figure out exact position,BAN,Senior,33,11,10/11/2025,"BHU,Sarkar,Srimoti Krishna Rani,Transport United"
+Sabina,Khatun,ST,1993,10/25,32,"Satkhira, Khulna, Bangladesh",,Paro FC,BHU,1,,BAN,Senior,61,38,10/11/2025,
+Sumaya,Matsushima,ST,2001,02/15,25,"Nagoya, Japan",JPN,Paro FC,BHU,1,10 appearances for Bangladesh. Father is Bangladeshi,BAN,Senior,10,1,10/11/2025,
+Masura,Parvin,CB,2001,10/17,24,"Satkhira, Khulna, Bangladesh",,Transport United,BHU,1,,BAN,Senior,44,3,10/11/2025,
+Srimoti Krishna Rani,Sarkar,FW,2001,01/01,25,"Gopalpur, Tangail, Bangladesh",-,Transport United,BHU,1,Need to figure out exact position,BAN,Senior,33,11,10/11/2025,
 Shayla-Medina,Ahmed,MF,2009,04/20,16,"London, England",GBR,Aston Villa FEP U18,ENG,Youth,,-,-,-,-,11/15/2025,"ENG,Ahmed,Shayla-Medina,Aston Villa FEP U18"
 Johura,Akhtar,CF,2003,10/13,22,"Bradford, England",GBR,Unattached,ENG,-,Last played for FC United of Manchester in 23/24 season (ENG-5),-,-,-,-,Status Unknown,"ENG,Akhtar,Johura,Unattached"
 Inayah,Begum,LB,2007,??,19,??,GBR,Wortley FC,ENG,Amateur,Birthday unknown. Age 18 reported in 2025.,-,-,-,-,1/11/2026,"ENG,Begum,Inayah,Wortley FC"
-Anika Rania,Siddiqui,RW,2005,05/25,20,??,SWE,Unattached,SWE,-,Previously played for IF Brommapojkarna Women,-,-,-,-,11/10/2025,"SWE,Siddiqui,Anika Rania,Unattached"
+Anika Rania,Siddiqui,RW,2005,05/25,20,??,SWE,Unattached,SWE,-,Previously played for IF Brommapojkarna Women,BAN,Senior,-,-,2/21/2026,"SWE,Siddiqui,Anika Rania,Unattached"
 Nawreen,Ahmad,CM,2008,??,18,??,USA,Florida State University,USA,College,DOB Unknown. Reported 18 on 1/11/26,-,-,-,,1/11/2026,"USA,Ahmad,Nawreen,Florida State University"
 Henna,Mahmood,CF,2005,??,21,"Northville, MI, USA",USA,University of Michigan-Dearborn,USA,College,Junior year at university. DOB approximated based on age report on Facbook post by 'DBOX'.,-,-,-,-,10/11/2025,"USA,Mahmood,Henna,University of Michigan-Dearborn"
