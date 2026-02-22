@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics | Probashi Footballers</title>
+    <link rel="stylesheet" href="style/stats-style.css">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                Probashi Footballers
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        Men
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="women.html" class="nav-link">
+                        Women
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="stats.html" class="nav-link">
+                        Statistics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">
+                        About
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+ <div class="container stats-container">
+        <header>
+            <h1>Player Statistics</h1>
+            <p>Statistics based on players in the database. Last updated: <span id="statsUpdated"></span></p>
+            <p>Position categories are determined by the player's listed position(s) in their profile.</p>
+        </header>
+
+        <!-- Loading Message -->
+        <div id="loadingMessage" class="loading" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading player data...</p>
+        </div>
+
+        <!-- Side-by-side sections -->
+        <div class="stats-row">
+            <!-- Total Counts Section -->
+            <div class="stats-section">
+                <h2 class="section-title">Total Count of Dual-National Players</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>Men</h3>
+                        <div class="stat-number" id="totalMen">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Women</h3>
+                        <div class="stat-number" id="totalWomen">0</div>
+                        <div class="stat-label">players</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Countries Stats Section -->
+            <div class="stats-section">
+                <h2 class="section-title">Countries Represented</h2>
+                <div class="summary-cards">
+                    <div class="stat-card">
+                        <h3>Men</h3>
+                        <div class="stat-number" id="menCountries">0</div>
+                        <div class="stat-label">countries</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Women</h3>
+                        <div class="stat-number" id="womenCountries">0</div>
+                        <div class="stat-label">countries</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Position Statistics Table -->
+        <div class="stats-table-container">
+            <h2 class="section-title">Players by Position</h2>
+
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Men</th>
+                        <th>Women</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="category-name">Forwards (ST, CF, or FW)</td>
+                        <td class="number-cell" id="forwardsRowMen">0</td>
+                        <td class="number-cell" id="forwardsRowWomen">0</td>
+                    </tr>
+                    <tr>
+                        <td class="category-name">Wingers (LW, RW, LWB, RWB)</td>
+                        <td class="number-cell" id="wingersRowMen">0</td>
+                        <td class="number-cell" id="wingersRowWomen">0</td>
+                    </tr>
+                    <tr>
+                        <td class="category-name">Midfielders (LM, CM, CAM, CDM, RM, or MF)</td>
+                        <td class="number-cell" id="midfieldersRowMen">0</td>
+                        <td class="number-cell" id="midfieldersRowWomen">0</td>
+                    </tr>
+                    <tr>
+                        <td class="category-name">Defenders (LB, CB, RB, or DF)</td>
+                        <td class="number-cell" id="defendersRowMen">0</td>
+                        <td class="number-cell" id="defendersRowWomen">0</td>
+                    </tr>
+                    <tr>
+                        <td class="category-name">Goalkeepers (GK)</td>
+                        <td class="number-cell" id="goalkeepersRowMen">0</td>
+                        <td class="number-cell" id="goalkeepersRowWomen">0</td>
+                    </tr>
+                    <tr>
+                        <td class="category-name">Unknown</td>
+                        <td class="number-cell" id="otherRowMen">0</td>
+                        <td class="number-cell" id="otherRowWomen">0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>© 2025-2026 Probashi-Footballers.com | Made with ♥ in Canada & USA | For the best experience, please open the website on a large screen.</p>
+        </footer>
+
+    <script src="scripts/stats.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
