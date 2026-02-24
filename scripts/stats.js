@@ -224,6 +224,56 @@ function calculateStats(data) {
     return stats;
 }
 
+// Update last updated timestamp from actual data
+function updateLastUpdateDate() {
+    // Combine men and women data
+    const allData = [...menData, ...womenData];
+    let latestDate = null;
+
+    allData.forEach(player => {
+        const updateDate = player[16]; // Last Update column
+        if (updateDate && updateDate !== "Status Unknown" && updateDate !== "-") {
+            const dateStr = updateDate.trim();
+
+            // Try different date formats
+            if (dateStr.includes('/')) {
+                // Format: MM/DD/YYYY or MM/DD/YY
+                const dateParts = dateStr.split('/');
+                if (dateParts.length === 3) {
+                    let year = dateParts[2];
+                    if (year.length === 2) {
+                        year = '20' + year;
+                    }
+                    const date = new Date(year, dateParts[0] - 1, dateParts[1]);
+                    if (!isNaN(date) && (!latestDate || date > latestDate)) {
+                        latestDate = date;
+                    }
+                }
+            } else if (dateStr.includes('-')) {
+                // Format: YYYY-MM-DD
+                const dateParts = dateStr.split('-');
+                if (dateParts.length === 3) {
+                    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                    if (!isNaN(date) && (!latestDate || date > latestDate)) {
+                        latestDate = date;
+                    }
+                }
+            }
+        }
+    });
+
+    if (latestDate) {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        };
+        document.getElementById('statsUpdated').textContent = latestDate.toLocaleDateString('en-US', options);
+    } else {
+        document.getElementById('statsUpdated').textContent = 'Unknown';
+    }
+}
+
 // Display statistics in the table
 function displayStats() {
     const menStats = calculateStats(menData);
@@ -272,14 +322,7 @@ function displayStats() {
         document.getElementById(`${rowId}Women`).textContent = womenCount.toLocaleString();
     }
 
-    // Update last updated timestamp - DATE ONLY (no time)
-    const today = new Date();
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    };
-    document.getElementById('statsUpdated').textContent = today.toLocaleDateString('en-US', options);
+    updateLastUpdateDate();
 }
 
 // Setup mobile menu (copied from main script)
