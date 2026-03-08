@@ -1,12 +1,12 @@
 Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Country,Tier,Notes,NT,Tier,Caps,Gls.,Last Update,Sorting String
-Surin,Atik,??,??,??,??,??,AUS,Melbourne University SC,AUS,College,DOB and position unknown,-,-,-,-,11/25/2025,"AUS,Atik,Surin,Melbourne University SC"
-Sabina,Khatun,ST,1993,10/25,32,"Satkhira, Khulna, Bangladesh",,Paro FC,BHU,1,,BAN,Senior,61,38,10/11/2025,
-Sumaya,Matsushima,ST,2001,02/15,25,"Nagoya, Japan",JPN,Paro FC,BHU,1,10 appearances for Bangladesh. Father is Bangladeshi,BAN,Senior,10,1,10/11/2025,
-Masura,Parvin,CB,2001,10/17,24,"Satkhira, Khulna, Bangladesh",,Transport United,BHU,1,,BAN,Senior,44,3,10/11/2025,
-Srimoti Krishna Rani,Sarkar,FW,2001,01/01,25,"Gopalpur, Tangail, Bangladesh",-,Transport United,BHU,1,Need to figure out exact position,BAN,Senior,33,11,10/11/2025,
-Shayla-Medina,Ahmed,MF,2009,04/20,16,"London, England",GBR,Aston Villa FEP U18,ENG,Youth,,-,-,-,-,11/15/2025,"ENG,Ahmed,Shayla-Medina,Aston Villa FEP U18"
-Johura,Akhtar,CF,2003,10/13,22,"Bradford, England",GBR,Unattached,ENG,-,Last played for FC United of Manchester in 23/24 season (ENG-5),-,-,-,-,Status Unknown,"ENG,Akhtar,Johura,Unattached"
-Inayah,Begum,LB,2007,??,19,??,GBR,Wortley FC,ENG,Amateur,Birthday unknown. Age 18 reported in 2025.,-,-,-,-,1/11/2026,"ENG,Begum,Inayah,Wortley FC"
-Anika Rania,Siddiqui,RW,2005,05/25,20,Sweden,SWE,Unattached,SWE,-,Previously played for IF Brommapojkarna Women,BAN,Senior,2,0,2/21/2026,"SWE,Siddiqui,Anika Rania,Unattached"
-Nawreen,Ahmad,CM,2008,??,18,??,USA,Florida State University,USA,College,DOB Unknown. Reported 18 on 1/11/26,-,-,-,,1/11/2026,"USA,Ahmad,Nawreen,Florida State University"
-Henna,Mahmood,CF,2005,??,21,"Northville, MI, USA",USA,University of Michigan-Dearborn,USA,College,Junior year at university. DOB approximated based on age report on Facbook post by 'DBOX'.,-,-,-,-,10/11/2025,"USA,Mahmood,Henna,University of Michigan-Dearborn"
+Surin,Atik,??,??,??,??,??,AUS,Melbourne University SC,AUS,College,DOB and position unknown,-,-,-,-,11/25/2025,"AUS,Atik,Surin,??,Melbourne University SC"
+Sabina,Khatun,ST,1993,10/25,32,"Satkhira, Khulna, Bangladesh",,Paro FC,BHU,1,,BAN,Senior,61,38,10/11/2025,"BHU,Khatun,Sabina,1993,Paro FC"
+Sumaya,Matsushima,ST,2001,02/15,25,"Nagoya, Japan",JPN,Paro FC,BHU,1,10 appearances for Bangladesh. Father is Bangladeshi,BAN,Senior,10,1,10/11/2025,"BHU,Matsushima,Sumaya,2001,Paro FC"
+Masura,Parvin,CB,2001,10/17,24,"Satkhira, Khulna, Bangladesh",,Transport United,BHU,1,,BAN,Senior,44,3,10/11/2025,"BHU,Parvin,Masura,2001,Transport United"
+Srimoti Krishna Rani,Sarkar,FW,2001,01/01,25,"Gopalpur, Tangail, Bangladesh",-,Transport United,BHU,1,Need to figure out exact position,BAN,Senior,33,11,10/11/2025,"BHU,Sarkar,Srimoti Krishna Rani,2001,Transport United"
+Shayla-Medina,Ahmed,MF,2009,04/20,16,"London, England",GBR,Aston Villa FEP U18,ENG,Youth,,-,-,-,-,11/15/2025,"ENG,Ahmed,Shayla-Medina,2009,Aston Villa FEP U18"
+Johura,Akhtar,CF,2003,10/13,22,"Bradford, England",GBR,Unattached,ENG,-,Last played for FC United of Manchester in 23/24 season (ENG-5),-,-,-,-,Status Unknown,"ENG,Akhtar,Johura,2003,Unattached"
+Inayah,Begum,LB,2007,??,19,??,GBR,Wortley FC,ENG,Amateur,Birthday unknown. Age 18 reported in 2025.,-,-,-,-,1/11/2026,"ENG,Begum,Inayah,2007,Wortley FC"
+Anika Rania,Siddiqui,RW,2005,05/25,20,Sweden,SWE,Unattached,SWE,-,Previously played for IF Brommapojkarna Women,BAN,Senior,2,0,2/21/2026,"SWE,Siddiqui,Anika Rania,2005,Unattached"
+Nawreen,Ahmad,CM,2008,??,18,??,USA,Florida State University,USA,College,DOB Unknown. Reported 18 on 1/11/26,-,-,-,,1/11/2026,"USA,Ahmad,Nawreen,2008,Florida State University"
+Henna,Mahmood,CF,2005,??,21,"Northville, MI, USA",USA,Corktown WFC,USA,2,Former player for University of Michigan-Dearborn. DOB approximate.,-,-,-,-,02/22/2026,"USA,Mahmood,Henna,2005,Corktown WFC"
