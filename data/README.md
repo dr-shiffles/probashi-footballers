@@ -7,4 +7,6 @@ Feel free to download for your own uses.
 
 **Sorting Function:** =J2&","&B2&","&A2&","&D2&","&I2
 
-**Age:** =DATEDIF(D2&"/"&C2,TODAY(),"Y")
+**Age:** =IFERROR(IFERROR(DATEDIF(E2&"/"&D2,TODAY(),"Y"),DATEDIF("1/1/"&D2,TODAY(),"Y")),"??")
+
+Please use LibreOffice to edit the .CSV files. Microsoft Excel, despite multiple attempts to configure it, will make all the dates end in the current year, i.e. 10/12 becomes 10/12/2026. This breaks the above age formula. 
