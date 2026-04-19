@@ -33,12 +33,22 @@ async function loadCSVData(csvFilename = 'data/mens.csv') {
     }
     
     // Sort by sorting string column (last column in data)
+    // Unattached players (starting with ~~~) go to the bottom
     playersData.sort((a, b) => {
         const sortA = a[a.length - 1] || '';
         const sortB = b[b.length - 1] || '';
-        return sortA.localeCompare(sortB);
+
+        const isUnattachedA = sortA.startsWith('~~~');
+        const isUnattachedB = sortB.startsWith('~~~');
+
+        // If both are unattached or both are attached, sort normally
+        if (isUnattachedA === isUnattachedB) {
+            return sortA.localeCompare(sortB);
+        }
+
+        // Unattached goes to the bottom
+        return isUnattachedA ? 1 : -1;
     });
-    
     // Extract filter options
     extractFilterOptions();
     
