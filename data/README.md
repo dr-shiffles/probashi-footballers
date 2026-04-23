@@ -9,11 +9,15 @@ For example, Microsoft Excel has a habit of changing the values in column E to d
 ## Formulae to use for .CSV file when modifying:
 
 **Age (Column F):** 
+
 `=IFERROR(IFERROR(DATEDIF(E2&"/"&D2,TODAY(),"Y"),DATEDIF("1/1/"&D2,TODAY(),"Y")),"??")`
+
 Put this in cell **F2** when editing the .csv in LibreOffice and autofill.
 
 **Sorting Function (Column R):** 
+
 `=J2&","&B2&","&A2&","&D2&","&I2`
+
 Put this in cell **R2** when editing the .csv in LibreOffice and autofill.
 
 The JavaScript on the website should automatically sort the data when presenting it. However, you can apply an AutoFilter on Row 1, and sort column R by Ascending to make it easier to read when editing the file later. 
