@@ -18,10 +18,6 @@ The database is compiled from following sources:
 
 # Want to Contribute?
 If you want to help contribute to the database by providing new player information, existing player updates, etc; please feel free to send me a DM on [Twitter/X (@dr_shiffles)](https://x.com/dr_shiffles) or send me a message on Transfermarkt (drshiffles).
-~~Or, since we're on GitHub, I guess you can do a pull request? Idk, I'm not sure GitHub was originally intended as a way to do version control on a bunch of .csv files, but it's working for me, so I think you could do a pull-request.~~
-I plan on setting up a template so player submissions can be made from GitHub through the "Issues" menu, or another method on GitHub that may be more suitable. 
-
-In the original version of the website made with Google Sites and Google Sheets (very similar to what [Canucks Abroad](https://www.canucks-abroad.ca/) has set up, minus the submission form), I offered the option of providing submissions via a Google Form. Unfortunately, some Internet Trolls got the wind of it right after the [AFC Asian Cup Qualification game back in November 2025](https://www.the-afc.com/en/national/afc_asian_cup.html/news/qualifiers-group-c-bangladesh-1-0-india), and decided to spam the form with some choice words about me, Forge FC, and Bangladesh. As such, I had to take it down, and I have no plans of resuming the Google Form method, as I am trying to reduce this website's dependency on Google Services. (Not that I have a personal problem with them, I just want to make it easier to contribute without relying on Google)
 
 # Want to fork this website for other countries?
 Sure! Generally everything should work, as long as your database follows the same formatting. 
