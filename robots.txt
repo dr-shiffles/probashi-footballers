@@ -1,0 +1,17 @@
+txt
+
+User-agent: *
+Allow: /
+Disallow: /data/
+Disallow: /scripts/
+Disallow: /style/
+
+User-agent: Googlebot
+Allow: /
+Disallow: /data/
+Disallow: /scripts/
+Disallow: /style/
+Crawl-delay: 1
+
+
+Sitemap: https://www.probashi-footballers.com/sitemap.xml
