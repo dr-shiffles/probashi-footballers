@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Guide | Probashi-Footballers.com - Tracking the global pipeline of Bangladeshi-origin football talent</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                Probashi Footballers
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        Men
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="women.html" class="nav-link">
+                        Women
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="stats.html" class="nav-link">
+                        Statistics
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="guide.html" class="nav-link">
+                        Guide
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">
+                        About
+                    </a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="about-content">
+            <header>
+                <h1>Database Guide</h1>
+            </header>
+             <div class="about-section">
+
+                <p><b>Birthday and Age:</b> Birth year and Birth Date (Month & Day) are kept in separate columns to accommodate for players where exact birthday is unknown, and allows for sorting based on birth year to check against youth national team competitions' birth year requirements.</p>
+                <p><b>Positions:</b> Use 2/3 letter abbreviation for the player's position. If specific outfield position is unknown, it will be represented by FW (Forward), MF (Midfielder) or DF (Defender). For the abbreviation, refer to GiveMeSport's guide on football positions (Link).</p>
+                <p><b>Nationality Information:</b><br />
+                <ul>
+                <li><b>Birthplace:</b> Municipality, State/Province and Country where the Player was born. Optional field. </li>
+                <li><b>Citizenship:</b> Player's country of citizenship, apart from Bangladesh. Represented by <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3">ISO 3166-1 alpha-3 codes.</a></li>
+                </ul>
+                <p><b>Current Team Information:</b>
+                <ul>
+                <li><b>Club Name:</b> Official club name. If the player is at the youth reserves team of a professional club, the name of the professional club goes here, and in the notes, specifcy which youth team the player is part of.</li>
+                <li><b>Country:</b> Country of the league where this club competes in. This also applies to teams that are located in one country but competes in another country's league (i.e. Canadian MLS teams). Uses FIFA country codes. For players without a club, "~~~" is used for this field.</li>
+                <li><b>Tier:</b> Which tier of the country's pyramid the league is in. i.e. League 1 Ontario = 3.
+                    <div class="sub-section">
+                        <p>The following codes are used for the tiers:</p>
+                        <table class="tier-table">
+                            <thead>
+                                <tr>
+                                    <th>Tier on the Football Pyramid</th>
+                                    <th>Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Youth / Academy Teams</td><td><b>YA</b></td></tr>
+                                <tr><td>Amateur Teams</td><td><b>AM</b></td></tr>
+                                <tr><td>College / University Sports</td><td><b>CL</b></td></tr>
+                                <tr><td>Futsal</td><td><b>F1,F2,F3...FS</b></td></tr>
+                                <tr><td>Numeric tiers (1-12)</td><td><b>1, 2, 3, ... 12</b></td></tr>
+                                <tr><td>Blank / Unknown</td><td><b>??</b></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                </ul>
+                </p>
+                <p><b>Notes:</b> Used to provide additional information that is not explained by the other columns.</p>
+                <p>
+                <b>National Team Information:</b>
+                <ul>
+                <li><b>NT:</b> FIFA Country Code (Link) of the National Team that this player has made an appearance for.
+                <li><b>Tier:</b> Which level of the national team this player has appeared for; i.e. Senior, U21, U19.
+                <li><b>Caps:</b> Amount of appearances this player has made an appearance for the national team.
+                <li><b>Gls.:</b> Goals scored by this player for the national team.
+                </ul>
+                </p>
+                <p>
+                <b>Last Update:</b> Date in MM/DD/YYYY when this row was last updated with new information. If there has not been new information in a long time (subjective), it will be marked as "Status Unknown".
+                </p>
+             </div>
+
+            <footer>
+            <p>© 2025-2026 Probashi-Footballers.com | Made with ♥ in Canada & USA<br />For the best experience, please open the website on a large screen.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle for About page
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

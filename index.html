@@ -32,6 +32,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="guide.html" class="nav-link">
+                        Guide
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="about.html" class="nav-link">
                         About
                     </a>
@@ -49,74 +54,107 @@
         <header>
             <h1>Tracking the global pipeline of Bangladeshi-origin football talent</h1>
         </header>
+
         <h2 class="gender">Men's Team Players</h2>
-        <p class="body-text">This page contains the list of Male Bangladeshi-origin players. Use the filter options below to filter players to your liking. <br /></p>
-        <div class="controls">
-            <div class="filter-group">
-                <label for="nameFilter"><i class="fas fa-user"></i> Name:</label>
-                <input type="text" id="nameFilter" placeholder="Search by name...">
-                
-                <label for="positionFilter"><i class="fas fa-map-marker-alt"></i> Position:</label>
-                <select id="positionFilter">
-                    <option value="">All Positions</option>
-                </select>
-                
-                <label for="birthYearFilter"><i class="fas fa-calendar"></i> Birth Year:</label>
-                <select id="birthYearFilter">
-                    <option value="">All Years</option>
-                </select>
-                
-                <label for="countryFilter"><i class="fas fa-globe"></i> Country:</label>
-                <select id="countryFilter">
-                    <option value="">All Countries</option>
-                </select>
-                
+        <p class="body-text">This page contains the list of Male Bangladeshi-origin players. Use the filter options on the left to filter players to your liking.</p>
+
+        <!-- Two-column layout: Filters on left, table on right -->
+        <div class="main-layout">
+            <!-- Sidebar Filters -->
+            <div class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Filter Players</h3>
+
+                <div class="filter-group">
+                    <label for="nameFilter"><i class="fas fa-user"></i> Name</label>
+                    <input type="text" id="nameFilter" placeholder="Search by name...">
+                </div>
+
+                <div class="filter-group">
+                    <label for="positionFilter"><i class="fas fa-futbol"></i> Position</label>
+                    <select id="positionFilter">
+                        <option value="">All Positions</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="birthYearFilter"><i class="fas fa-calendar"></i> Birth Year</label>
+                    <select id="birthYearFilter">
+                        <option value="">All Years</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="countryFilter"><i class="fas fa-globe"></i> Country</label>
+                    <select id="countryFilter">
+                        <option value="">All Countries</option>
+                    </select>
+                </div>
+
+                <!-- NEW: National Team Filter -->
+                <div class="filter-group">
+                    <label for="ntFilter"><i class="fas fa-flag-checkered"></i> National Team Appearance</label>
+                    <select id="ntFilter">
+                        <option value="all">All</option>
+                        <option value="bangladesh">Bangladesh (BAN)</option>
+                        <option value="others">Others</option>
+                        <option value="none">None</option>
+                    </select>
+                </div>
+
                 <button id="resetFilters" class="reset-btn">
                     <i class="fas fa-redo"></i> Reset Filters
                 </button>
             </div>
-            
-            <div class="table-info">
-                <span id="rowCount">Loading...</span>
-                <div class="pagination-controls">
-                    <button id="prevPage" class="page-btn"><i class="fas fa-chevron-left"></i></button>
-                    <span id="pageInfo">Page 1 of 1</span>
-                    <button id="nextPage" class="page-btn"><i class="fas fa-chevron-right"></i></button>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Controls bar with pagination -->
+                <div class="controls-bar">
+                    <div class="table-info">
+                        <span id="rowCount">Loading...</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="prevPage" class="page-btn"><i class="fas fa-chevron-left"></i></button>
+                        <span id="pageInfo">Page 1 of 1</span>
+                        <button id="nextPage" class="page-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table id="playersTable">
+                        <thead>
+                            <tr>
+                                <th>Given Names</th>
+                                <th>Last Name</th>
+                                <th>Positions</th>
+                                <th>Birth Year</th>
+                                <th>Birth Date</th>
+                                <th>Age</th>
+                                <th>Birthplace</th>
+                                <th>Citizenship</th>
+                                <th>Club Name</th>
+                                <th>Country</th>
+                                <th>Tier</th>
+                                <th>Notes</th>
+                                <th>NT</th>
+                                <th>Tier</th>
+                                <th>Caps</th>
+                                <th>Goals</th>
+                                <th>Last Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be loaded here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <div class="table-container">
-            <table id="playersTable">
-                <thead>
-                    <tr>
-                        <th>Given Names</th>
-                        <th>Last Name</th>
-                        <th>Positions</th>
-                        <th>Birth Year</th>
-                        <th>Birth Date</th>
-                        <th>Age</th>
-                        <th>Birthplace</th>
-                        <th>Citizenship</th>
-                        <th>Club Name</th>
-                        <th>Country</th>
-                        <th>Tier</th>
-                        <th>Notes</th>
-                        <th>NT</th>
-                        <th>Tier</th>
-                        <th>Caps</th>
-                        <th>Goals</th>
-                        <th>Last Update</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Data will be loaded here -->
-                </tbody>
-            </table>
-        </div>
         <p id="lastUpdateInfo">Data last updated: <span id="lastUpdate"></span></p>
         <footer>
-            <p>© 2025-2026 Probashi-Footballers.com | Made with ♥ in Canada & USA | For the best experience, please open the website on a large screen.</p>
+            <p>© 2025-2026 Probashi-Footballers.com | Made with ♥ in Canada & USA<br />For the best experience, please open the website on a large screen.</p>
         </footer>
     </div>
 
@@ -126,21 +164,23 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCSVData('data/mens.csv');
             setupEventListeners();
-            
+
             // Mobile menu toggle
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
-            
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-            
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    navMenu.classList.remove('active');
+
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
                 });
-            });
+
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
         });
     </script>
 </body>
