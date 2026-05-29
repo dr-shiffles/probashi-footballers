@@ -33,7 +33,7 @@ body {
     background-color: white;
     border-radius: 0 0 5px 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    padding: 20px;
 }
 
 /* NEW: Two-column layout for filters and content */
@@ -371,7 +371,7 @@ footer p {
 
 /* About page specific */
 .about-content {
-    max-width: 800px;
+    max-width: 80%;
     margin: 0 auto;
     padding: 20px 0;
 }
