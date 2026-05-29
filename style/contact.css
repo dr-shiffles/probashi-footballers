@@ -1,0 +1,85 @@
+/* Contact page specific styles */
+.contact-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 5px 0;
+}
+
+.contact-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.contact-header h1 {
+    color: #274e13;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.contact-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-form-container {
+    flex: 2;
+    min-width: 280px;
+}
+
+.contact-info {
+    flex: 1;
+    min-width: 240px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    height: fit-content;
+}
+
+.contact-info h3 {
+    color: #274e13;
+    margin-bottom: 15px;
+    font-size: 20px;
+    border-left: 4px solid #f5b042;
+    padding-left: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.info-item i {
+    width: 30px;
+    color: #274e13;
+    font-size: 18px;
+}
+
+.info-item p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.info-item a {
+    color: #274e13;
+    text-decoration: none;
+}
+
+.info-item a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .contact-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .contact-header h1 {
+        font-size: 24px;
+    }
+}
