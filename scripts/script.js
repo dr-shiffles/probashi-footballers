@@ -21,6 +21,28 @@ const pageInfo = document.getElementById('pageInfo');
 const rowCount = document.getElementById('rowCount');
 const lastUpdate = document.getElementById('lastUpdate');
 
+// Helper function to robustly parse date strings from the CSV (Index 16: Last Update)
+function parseUpdateDate(dateStr) {
+    if (!dateStr || dateStr === "Status Unknown" || dateStr === "-") return null;
+    
+    // Handle MM/DD/YYYY or M/D/YY formats
+    if (dateStr.includes('/')) {
+        const dateParts = dateStr.split('/');
+        if (dateParts.length === 3) {
+            let year = dateParts[2].trim();
+            if (year.length === 2) year = '20' + year; // Convert 26 to 2026
+            const month = parseInt(dateParts[0], 10) - 1;
+            const day = parseInt(dateParts[1], 10);
+            const date = new Date(year, month, day);
+            return isNaN(date.getTime()) ? null : date;
+        }
+    }
+    
+    // Fallback standard JS date parse (e.g. YYYY-MM-DD)
+    const fallbackDate = new Date(dateStr);
+    return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
+}
+
 // Load and parse CSV data
 async function loadCSVData(csvFilename = 'data/mens.csv') {
     playersData = await parseCSVData(csvFilename);
@@ -61,8 +83,11 @@ async function loadCSVData(csvFilename = 'data/mens.csv') {
     // Update the table
     updateTable();
 
-    // Update last update date
+    // Update last update date in footer
     updateLastUpdateDate();
+
+    // NEW: Display the most recently updated players list
+    displayRecentUpdates();
 }
 
 // Parse CSV data
@@ -347,27 +372,12 @@ function updatePagination() {
 
 // Update the last update date in footer
 function updateLastUpdateDate() {
-    // Find the latest update date from the data
     let latestDate = null;
 
     playersData.forEach(player => {
-        const updateDate = player[16]; // Last Update column
-        if (updateDate && updateDate !== "Status Unknown") {
-            // Try different date formats
-            const dateStr = updateDate;
-
-            // Check for MM/DD/YYYY format
-            if (dateStr.includes('/')) {
-                const dateParts = dateStr.split('/');
-                if (dateParts.length === 3) {
-                    // Handle two-digit years
-                    const year = dateParts[2].length === 2 ? '20' + dateParts[2] : dateParts[2];
-                    const date = new Date(year, dateParts[0] - 1, dateParts[1]);
-                    if (!isNaN(date) && (!latestDate || date > latestDate)) {
-                        latestDate = date;
-                    }
-                }
-            }
+        const date = parseUpdateDate(player[16]); // Last Update column (index 16)
+        if (date && (!latestDate || date > latestDate)) {
+            latestDate = date;
         }
     });
 
@@ -381,4 +391,53 @@ function updateLastUpdateDate() {
     } else {
         lastUpdate.textContent = "December 2025";
     }
+}
+
+// NEW: Compiles, sorts, and lists the 5 most recently updated entries
+function displayRecentUpdates() {
+    const recentContainer = document.getElementById('recentUpdatesList');
+    if (!recentContainer) return; // Guard clause if element doesn't exist
+
+    // Clear previous elements
+    recentContainer.innerHTML = '';
+
+    // Filter out rows without valid dates, map to objects containing parsed dates
+    const playersWithDates = playersData
+        .map(player => ({
+            data: player,
+            parsedDate: parseUpdateDate(player[16])
+        }))
+        .filter(item => item.parsedDate !== null);
+
+    // Sort by date descending (Newest first)
+    playersWithDates.sort((a, b) => b.parsedDate - a.parsedDate);
+
+    // Pick top 5 newest items
+    const topRecent = playersWithDates.slice(0, 5);
+
+    if (topRecent.length === 0) {
+        recentContainer.innerHTML = '<li>No recent update history found.</li>';
+        return;
+    }
+
+    // Build the list elements
+    topRecent.forEach(item => {
+        const p = item.data;
+        const firstName = p[0] || '';
+        const lastName = p[1] || '';
+        const position = p[2] || '-';
+        const club = p[8] || 'Unattached';
+        const country = p[9] || '-';
+        const rawDate = p[16];
+        const clubTier = p[10] || '-';
+        const notes = p[11] || 'N/A';
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <strong>${firstName} ${lastName}</strong>
+            <span class="update-details">${position} | Current Club: ${club} (${country}-${clubTier}) | Notes: ${notes}</span>
+            <span class="update-tag">Updated: ${rawDate}</span>
+        `;
+        recentContainer.appendChild(li);
+    });
 }

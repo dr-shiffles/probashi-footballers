@@ -511,3 +511,65 @@ footer p {
         font-size: 13px;
     }
 }
+
+/* Styling for the New Recent Updates Section */
+.last-update {
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px;
+
+    margin-left: 300px;
+
+}
+
+.recent-updates-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-updates-list li {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.recent-updates-list li:last-child {
+    border-bottom: none;
+}
+
+.recent-updates-list li:hover {
+    background-color: #f0f9f5;
+}
+
+.recent-updates-list .update-details {
+    color: #555;
+    flex-grow: 1;
+}
+
+.recent-updates-list .update-tag {
+    background-color: #e1f0ea;
+    color: #274e13;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Responsiveness for small screens */
+@media (max-width: 600px) {
+    .recent-updates-list li {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .recent-updates-list .update-details {
+        margin-left: 0;
+    }
+}
