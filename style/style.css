@@ -571,3 +571,73 @@ footer p {
         margin-left: 0;
     }
 }
+
+/* --- Dropdown Styles --- */
+
+/* Desktop Hover Interaction */
+@media (min-width: 769px) {
+    .nav-item.dropdown:hover .dropdown-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;             /* 1. Force the dropdown to align to the RIGHT edge of the icon */
+    left: auto;           /* 2. Reset the default left alignment */
+    background-color: #274e13;
+    min-width: 160px;     /* 3. Give it slightly more room for "About this website" */
+    white-space: nowrap;  /* 4. Keep the links on a single clean line */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    padding: 5px 0;
+    border-radius: 4px 0 4px 4px; /* Optional adjustment for a right-aligned box */
+    z-index: 1001;
+}
+
+.dropdown-link {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 10px 15px;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+.dropdown-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding-left: 18px; /* Subtle nudge effect */
+}
+
+/* Mobile Dropdown Layout Overrides */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        display: block; /* Kept block style to list inline on mobile drawer */
+        position: static;
+        background-color: rgba(0, 0, 0, 0.1); /* Darkens section slightly for visibility */
+        box-shadow: none;
+        width: 100%;
+        padding: 0;
+    }
+    
+    .dropdown-link {
+        padding: 12px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .dropdown-toggle i {
+        transform: rotate(0deg);
+        transition: transform 0.3s;
+    }
+    
+    /* Optional: flips the arrow if menu is active on mobile */
+    .nav-item.dropdown.active .dropdown-toggle i {
+        transform: rotate(180deg);
+    }
+}
