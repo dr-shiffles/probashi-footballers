@@ -17,34 +17,29 @@
                 <img src="img/logo_512x512.png" alt="Logo" style="width:48px;height:48px">
                 Probashi Footballers
             </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                        Men
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="women.html" class="nav-link">
-                        Women
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="stats.html" class="nav-link">
-                        Statistics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="guide.html" class="nav-link">
-                        Guide
-                    </a>
-                </li>
-                <li class="nav-item active">
-                    <a href="about.html" class="nav-link">
-                        About
-                    </a>
-                </li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-            </ul>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link">Men</a>
+            </li>
+            <li class="nav-item">
+                <a href="women.html" class="nav-link">Women</a>
+            </li>
+            <li class="nav-item">
+                <a href="stats.html" class="nav-link">Statistics</a>
+            </li>
+            <!-- Combined Dropdown Menu -->
+            <li class="nav-item dropdown active">
+                <a href="#" class="nav-link dropdown-toggle" onclick="return true;">
+                    More Info.
+                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="about.html" class="dropdown-link">About Us</a></li>
+                    <li><a href="guide.html" class="dropdown-link">Database Guide</a></li>
+                    <li><a href="contact.html" class="dropdown-link">Contact Us</a></li>
+                </ul>
+            </li>
+        </ul>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -95,7 +90,7 @@
              <div class="about-section">
              <h2>AI Usage Disclaimer</h2>
                 <p>This website was created in part with AI/LLM tools such as DeepSeek and ChatGPT, to aid with the presentation of the data on the web. </p>
-                <p>The player database and its contents are manually collected and organized by community volunteers through the sources mentioned in the Methodology section above.
+                <p>The player database and its contents are manually collected and organized by community volunteers through the sources mentioned in the Methodology section above. </p>
              </div>
 
             <footer>
@@ -118,13 +113,13 @@
                 navMenu.classList.toggle('active');
             });
 
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-link').forEach(link => {
+            // Close menu when clicking an actual structural target link
+            document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-link').forEach(link => {
                 link.addEventListener('click', () => {
                     navMenu.classList.remove('active');
                 });
-            });
-        });
+            });          
+        }); 
     </script>
 </body>
 </html>
