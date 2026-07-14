@@ -178,13 +178,13 @@
     </div>
 
     <script src="scripts/script.js"></script>
-    <script>
-        // Load men's data
+   <script>
+        // Load data
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCSVData('data/mens.csv');
             setupEventListeners();
 
-            // Mobile menu toggle
+            // Mobile menu toggle (Safely handles dropdown)
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
 
@@ -193,8 +193,8 @@
                     navMenu.classList.toggle('active');
                 });
 
-                // Close menu when clicking a link
-                document.querySelectorAll('.nav-link').forEach(link => {
+                // Close menu when clicking structural links (keeps dropdown open)
+                document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-link').forEach(link => {
                     link.addEventListener('click', () => {
                         navMenu.classList.remove('active');
                     });
