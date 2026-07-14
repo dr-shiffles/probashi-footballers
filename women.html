@@ -33,17 +33,17 @@
                         Statistics
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="guide.html" class="nav-link">
-                        Guide
+               <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="return true;">
+                        More Info.
+                        <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="about.html" class="dropdown-link">About Us</a></li>
+                        <li><a href="guide.html" class="dropdown-link">Database Guide</a></li>
+                        <li><a href="contact.html" class="dropdown-link">Contact Us</a></li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="about.html" class="nav-link">
-                        About
-                    </a>
-                </li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>
@@ -176,23 +176,23 @@
     </div>
 
     <script src="scripts/script.js"></script>
-    <script>
-        // Load women's data
+<script>
+        // Load data
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCSVData('data/women.csv');
             setupEventListeners();
-            
-            // Mobile menu toggle
+
+            // Mobile menu toggle (Safely handles dropdown)
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
-            
+
             if (hamburger && navMenu) {
                 hamburger.addEventListener('click', () => {
                     navMenu.classList.toggle('active');
                 });
-                
-                // Close menu when clicking a link
-                document.querySelectorAll('.nav-link').forEach(link => {
+
+                // Close menu when clicking structural links (keeps dropdown open)
+                document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-link').forEach(link => {
                     link.addEventListener('click', () => {
                         navMenu.classList.remove('active');
                     });
