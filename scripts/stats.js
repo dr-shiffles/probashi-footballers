@@ -101,11 +101,6 @@ function getPlayerCountry(player) {
     return player[9] || 'Unknown';
 }
 
-// Extract club name from player data (column index 8)
-function getPlayerClub(player) {
-    return player[8] || '';
-}
-
 // Extract NT from player data (column index 12)
 function getPlayerNT(player) {
     return player[12] || '';
@@ -122,25 +117,26 @@ function getPlayerPositions(player) {
 function categorizePosition(position) {
     if (!position) return 'Unknown';
 
-    const positionUpper = position.toUpperCase().trim();
+        const positionUpper = position.toUpperCase().trim();
 
-    for (const [category, positions] of Object.entries(positionCategories)) {
-        for (const pos of positions) {
-            // Check if the position exactly matches or contains the category code
-            if (positionUpper === pos || positionUpper.includes(pos)) {
-                return category;
+        for (const [category, positions] of Object.entries(positionCategories)) {
+            for (const pos of positions) {
+                // Check if the position exactly matches or contains the category code
+                if (positionUpper === pos || positionUpper.includes(pos)) {
+                    return category;
+                }
             }
         }
-    }
 
-    return 'Other';
+        return 'Other';
 }
 
-// Calculate statistics - UPDATED WITH CORRECT CLUB STATUS AND NT CALLUPS
+// Calculate statistics
 function calculateStats(data) {
     const stats = {
         total: data.length,
         countries: new Set(),
+        countryCounts: {}, // Track frequency of each country
         positions: {
             'Forwards': 0,
             'Midfielders': 0,
@@ -150,10 +146,6 @@ function calculateStats(data) {
             'Other': 0,
             'Unknown': 0
         },
-        clubStatus: {
-            'With Club': 0,
-            'Without Club': 0
-        },
         ntCallups: {
             'Bangladesh': 0,
             'Other Countries': 0,
@@ -162,46 +154,32 @@ function calculateStats(data) {
     };
 
     data.forEach(player => {
-        // Count countries
-        const country = getPlayerCountry(player);
-        if (country && country !== '-') {
+        // Count countries - Ignore empty, '-', and '~~~' (Unattached/Unknown)
+        const countryRaw = getPlayerCountry(player);
+        if (countryRaw && countryRaw !== '-' && countryRaw !== '~~~' && countryRaw.toUpperCase() !== 'UNKNOWN') {
+            const country = countryRaw.trim().toUpperCase();
             stats.countries.add(country);
+
+            // Increment country frequency count
+            stats.countryCounts[country] = (stats.countryCounts[country] || 0) + 1;
         }
 
-        // Club Status - Check if Club Name column is exactly "Unattached"
-        const club = getPlayerClub(player);
-        if (club === 'Unattached') {
-            stats.clubStatus['Without Club']++;
-        } else if (club && club !== '-' && club !== '') {
-            stats.clubStatus['With Club']++;
-        } else {
-            // If club field is empty or '-', count as without club
-            stats.clubStatus['Without Club']++;
-        }
-
-        // NT Callups - Check NT column
+        // NT Callups
         const nt = getPlayerNT(player);
         if (nt === 'BAN') {
             stats.ntCallups['Bangladesh']++;
         } else if (nt && nt !== '-' && nt !== '') {
-            // Any non-empty, non-BAN value means called up by another country
             stats.ntCallups['Other Countries']++;
         } else {
-            // '-' or empty means no callups yet
             stats.ntCallups['No NT']++;
         }
 
-        // Get all positions for this player
+        // Positions
         const positions = getPlayerPositions(player);
-
         if (positions.length === 0) {
-            // No position listed
             stats.positions['Unknown']++;
         } else {
-            // Track which categories this player has been counted in
             const countedCategories = new Set();
-
-            // Check each position
             positions.forEach(position => {
                 const category = categorizePosition(position);
                 if (category !== 'Unknown' && category !== 'Other') {
@@ -209,19 +187,107 @@ function calculateStats(data) {
                 }
             });
 
-            // If we found specific categories, count them
             if (countedCategories.size > 0) {
                 countedCategories.forEach(category => {
                     stats.positions[category] = (stats.positions[category] || 0) + 1;
                 });
             } else {
-                // No matching categories found
                 stats.positions['Other']++;
             }
         }
     });
 
     return stats;
+}
+
+// Display statistics
+function displayStats() {
+    const menStats = calculateStats(menData);
+    const womenStats = calculateStats(womenData);
+
+    console.log('Men stats:', menStats);
+    console.log('Women stats:', womenStats);
+
+    // Helper to safely set text content only if the element exists in HTML
+    const safeSetText = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+    };
+
+        // Update summary cards
+        safeSetText('totalMen', menStats.total.toLocaleString());
+        safeSetText('totalWomen', womenStats.total.toLocaleString());
+
+        // Update countries count
+        safeSetText('menCountries', menStats.countries.size.toLocaleString());
+        safeSetText('womenCountries', womenStats.countries.size.toLocaleString());
+
+        // Update NT callups
+        safeSetText('menNTBangladesh', menStats.ntCallups['Bangladesh'].toLocaleString());
+        safeSetText('menNTOther', menStats.ntCallups['Other Countries'].toLocaleString());
+        safeSetText('menNTNone', menStats.ntCallups['No NT'].toLocaleString());
+        safeSetText('womenNTBangladesh', womenStats.ntCallups['Bangladesh'].toLocaleString());
+        safeSetText('womenNTOther', womenStats.ntCallups['Other Countries'].toLocaleString());
+        safeSetText('womenNTNone', womenStats.ntCallups['No NT'].toLocaleString());
+
+        // Update position table
+        const positionRows = {
+            'Forwards': 'forwardsRow',
+            'Wingers': 'wingersRow',
+            'Midfielders': 'midfieldersRow',
+            'Defenders': 'defendersRow',
+            'Goalkeepers': 'goalkeepersRow',
+            'Other': 'otherRow'
+        };
+
+        for (const [position, rowId] of Object.entries(positionRows)) {
+            const menCount = menStats.positions[position] || 0;
+            const womenCount = womenStats.positions[position] || 0;
+
+            safeSetText(`${rowId}Men`, menCount.toLocaleString());
+            safeSetText(`${rowId}Women`, womenCount.toLocaleString());
+        }
+
+        // Render Top 5 Countries Tables
+        renderTopCountriesTable('menTopCountriesBody', menStats.countryCounts);
+        renderTopCountriesTable('womenTopCountriesBody', womenStats.countryCounts);
+
+        updateLastUpdateDate();
+}
+
+// Helper: Generates and injects text-only rows for the Top 5 Countries tables
+function renderTopCountriesTable(targetElementId, countryCounts) {
+    const tableBody = document.getElementById(targetElementId);
+    if (!tableBody) return;
+
+        // Sort countries by count (descending) and take top 5
+        const sortedCountries = Object.entries(countryCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+        tableBody.innerHTML = '';
+
+        if (sortedCountries.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 15px; color: #777;">No data available</td></tr>`;
+            return;
+        }
+
+        sortedCountries.forEach(([code, count], index) => {
+            const rank = index + 1;
+
+            // Use global countryCodeMap (from countries.js) if available, fallback to code
+            const displayName = (typeof countryCodeMap !== 'undefined' && countryCodeMap[code]) ? countryCodeMap[code] : code;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+            <td style="text-align: center; font-weight: bold; width: 60px; color: #115c32;">#${rank}</td>
+            <td class="category-name" style="font-weight: 500;">
+            ${displayName}
+            </td>
+            <td class="number-cell" style="font-weight: bold; text-align: right;">${count.toLocaleString()}</td>
+            `;
+            tableBody.appendChild(row);
+        });
 }
 
 // Update last updated timestamp from actual data
@@ -272,57 +338,6 @@ function updateLastUpdateDate() {
     } else {
         document.getElementById('statsUpdated').textContent = 'Unknown';
     }
-}
-
-// Display statistics in the table
-function displayStats() {
-    const menStats = calculateStats(menData);
-    const womenStats = calculateStats(womenData);
-
-    console.log('Men stats:', menStats);
-    console.log('Women stats:', womenStats);
-
-    // Update summary cards
-    document.getElementById('totalMen').textContent = menStats.total.toLocaleString();
-    document.getElementById('totalWomen').textContent = womenStats.total.toLocaleString();
-
-    // Update countries count
-    document.getElementById('menCountries').textContent = menStats.countries.size.toLocaleString();
-    document.getElementById('womenCountries').textContent = womenStats.countries.size.toLocaleString();
-
-    // Update club status
-    document.getElementById('menWithClub').textContent = menStats.clubStatus['With Club'].toLocaleString();
-    document.getElementById('menWithoutClub').textContent = menStats.clubStatus['Without Club'].toLocaleString();
-    document.getElementById('womenWithClub').textContent = womenStats.clubStatus['With Club'].toLocaleString();
-    document.getElementById('womenWithoutClub').textContent = womenStats.clubStatus['Without Club'].toLocaleString();
-
-    // Update NT callups
-    document.getElementById('menNTBangladesh').textContent = menStats.ntCallups['Bangladesh'].toLocaleString();
-    document.getElementById('menNTOther').textContent = menStats.ntCallups['Other Countries'].toLocaleString();
-    document.getElementById('menNTNone').textContent = menStats.ntCallups['No NT'].toLocaleString();
-    document.getElementById('womenNTBangladesh').textContent = womenStats.ntCallups['Bangladesh'].toLocaleString();
-    document.getElementById('womenNTOther').textContent = womenStats.ntCallups['Other Countries'].toLocaleString();
-    document.getElementById('womenNTNone').textContent = womenStats.ntCallups['No NT'].toLocaleString();
-
-    // Update position table
-    const positionRows = {
-        'Forwards': 'forwardsRow',
-        'Wingers': 'wingersRow',
-        'Midfielders': 'midfieldersRow',
-        'Defenders': 'defendersRow',
-        'Goalkeepers': 'goalkeepersRow',
-        'Other': 'otherRow'
-    };
-
-    for (const [position, rowId] of Object.entries(positionRows)) {
-        const menCount = menStats.positions[position] || 0;
-        const womenCount = womenStats.positions[position] || 0;
-
-        document.getElementById(`${rowId}Men`).textContent = menCount.toLocaleString();
-        document.getElementById(`${rowId}Women`).textContent = womenCount.toLocaleString();
-    }
-
-    updateLastUpdateDate();
 }
 
 // Setup mobile menu (copied from main script)
