@@ -20,31 +20,25 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                        Men
-                    </a>
+                    <a href="index.html" class="nav-link">Men</a>
                 </li>
                 <li class="nav-item">
-                    <a href="women.html" class="nav-link">
-                        Women
-                    </a>
+                    <a href="women.html" class="nav-link">Women</a>
                 </li>
                 <li class="nav-item active">
-                    <a href="stats.html" class="nav-link">
-                        Statistics
-                    </a>
+                    <a href="stats.html" class="nav-link">Statistics</a>
                 </li>
-                           <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" onclick="return true;">
-                    More Info.
-                    <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="about.html" class="dropdown-link">About Us</a></li>
-                    <li><a href="guide.html" class="dropdown-link">Database Guide</a></li>
-                    <li><a href="contact.html" class="dropdown-link">Contact Us</a></li>
-                </ul>
-            </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" onclick="return true;">
+                        More Info.
+                        <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="about.html" class="dropdown-link">About Us</a></li>
+                        <li><a href="guide.html" class="dropdown-link">Database Guide</a></li>
+                        <li><a href="contact.html" class="dropdown-link">Contact Us</a></li>
+                    </ul>
+                </li>
             </ul>
             <div class="hamburger">
                 <span class="bar"></span>
@@ -66,10 +60,14 @@
             <p>Loading player data...</p>
         </div>
 
-        <!-- First Row: Total Counts and Countries Represented -->
-        <div class="stats-row">
-            <!-- Total Counts Section -->
-            <div class="stats-section">
+        <!-- ==========================================================================
+             FIRST ROW: Dual-National Count & National Team Callups (3 Columns)
+             ========================================================================== -->
+        <!-- FIXED: Changed '3-col-row' to 'three-col-row' -->
+        <div class="stats-row three-col-row">
+
+            <!-- Column 1: Total Count of Dual-National Players -->
+            <div class="stats-section grid-col">
                 <h2 class="section-title">Total Count of Dual-National Players</h2>
                 <div class="summary-cards">
                     <div class="stat-card">
@@ -85,74 +83,17 @@
                 </div>
             </div>
 
-            <!-- Countries Stats Section -->
-            <div class="stats-section">
-                <h2 class="section-title">Countries Represented</h2>
-                <div class="summary-cards">
-                    <div class="stat-card">
-                        <h3>Men</h3>
-                        <div class="stat-number" id="menCountries">0</div>
-                        <div class="stat-label">countries</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Women</h3>
-                        <div class="stat-number" id="womenCountries">0</div>
-                        <div class="stat-label">countries</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Second Row: Club Status -->
-        <div class="stats-row">
-            <!-- Men's Club Status -->
-            <div class="stats-section">
-                <h2 class="section-title">Men's Club Status</h2>
-                <div class="summary-cards">
-                    <div class="stat-card">
-                        <h3>With Club</h3>
-                        <div class="stat-number" id="menWithClub">0</div>
-                        <div class="stat-label">players</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Without Club</h3>
-                        <div class="stat-number" id="menWithoutClub">0</div>
-                        <div class="stat-label">players</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Women's Club Status -->
-            <div class="stats-section">
-                <h2 class="section-title">Women's Club Status</h2>
-                <div class="summary-cards">
-                    <div class="stat-card">
-                        <h3>With Club</h3>
-                        <div class="stat-number" id="womenWithClub">0</div>
-                        <div class="stat-label">players</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Without Club</h3>
-                        <div class="stat-number" id="womenWithoutClub">0</div>
-                        <div class="stat-label">players</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Third Row: NT Callups -->
-        <div class="stats-row">
-            <!-- Men's NT Callups -->
-            <div class="stats-section">
+            <!-- Column 2: Men's National Team Callups -->
+            <div class="stats-section grid-col">
                 <h2 class="section-title">Men's National Team Callups</h2>
-                <div class="summary-cards">
+                <div class="summary-cards three-cards">
                     <div class="stat-card">
                         <h3>Bangladesh</h3>
                         <div class="stat-number" id="menNTBangladesh">0</div>
                         <div class="stat-label">players</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Other Countries</h3>
+                        <h3>Other</h3>
                         <div class="stat-number" id="menNTOther">0</div>
                         <div class="stat-label">players</div>
                     </div>
@@ -164,17 +105,17 @@
                 </div>
             </div>
 
-            <!-- Women's NT Callups -->
-            <div class="stats-section">
+            <!-- Column 3: Women's National Team Callups -->
+            <div class="stats-section grid-col">
                 <h2 class="section-title">Women's National Team Callups</h2>
-                <div class="summary-cards">
+                <div class="summary-cards three-cards">
                     <div class="stat-card">
                         <h3>Bangladesh</h3>
                         <div class="stat-number" id="womenNTBangladesh">0</div>
                         <div class="stat-label">players</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Other Countries</h3>
+                        <h3>Other</h3>
                         <div class="stat-number" id="womenNTOther">0</div>
                         <div class="stat-label">players</div>
                     </div>
@@ -187,8 +128,68 @@
             </div>
         </div>
 
-        <!-- Position Statistics Table -->
-        <div class="stats-table-container">
+        <!-- ==========================================================================
+             SECOND ROW: Countries Represented & Top 5 Countries Tables (3 Columns)
+             ========================================================================== -->
+        <!-- FIXED: Changed '3-col-row' to 'three-col-row' -->
+        <div class="stats-row three-col-row" style="margin-top: 20px;">
+
+                <!-- Column 1: Countries Represented (Vertically Stacked Cards) -->
+                <div class="stats-section grid-col grid-col-narrow stack-section">
+                <h2 class="section-title">Countries Represented</h2>
+                <div class="summary-cards vertical-stack">
+                    <div class="stat-card vertical-card">
+                        <h3>Men</h3>
+                        <div class="stat-number" id="menCountries">0</div>
+                        <div class="stat-label">countries</div>
+                    </div>
+                    <div class="stat-card vertical-card">
+                        <h3>Women</h3>
+                        <div class="stat-number" id="womenCountries">0</div>
+                        <div class="stat-label">countries</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Men's Top 5 Table -->
+            <div class="stats-table-container compact-table-wrapper grid-col" style="margin: 0;">
+                <h2 class="section-title">Men: Top 5 Countries</h2>
+                <table class="stats-table compact-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">Rank</th>
+                            <th>Country</th>
+                            <th style="text-align: right; width: 80px;">Players</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menTopCountriesBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Column 3: Women's Top 5 Table -->
+            <div class="stats-table-container compact-table-wrapper grid-col" style="margin: 0;">
+                <h2 class="section-title">Women: Top 5 Countries</h2>
+                <table class="stats-table compact-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">Rank</th>
+                            <th>Country</th>
+                            <th style="text-align: right; width: 80px;">Players</th>
+                        </tr>
+                    </thead>
+                    <tbody id="womenTopCountriesBody">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==========================================================================
+             THIRD ROW: Position Statistics Table (Stays Centered at Bottom)
+             ========================================================================== -->
+        <div class="stats-table-container" style="margin-top: 40px; margin-bottom: 40px;">
             <h2 class="section-title">Players by Position</h2>
 
             <table class="stats-table">
@@ -241,20 +242,22 @@
                 For the best experience, please open the website on a large screen.
             </p>
         </footer>
-    </div>
+    </div> <!-- FIXED: Closed container div tag here -->
 
+    <!-- FIXED: Loaded countries.js BEFORE stats.js -->
+    <script src="scripts/countries.js"></script>
     <script src="scripts/stats.js"></script>
-   <script>
+    <script>
         // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', () => {
             const hamburger = document.querySelector('.hamburger');
             const navMenu = document.querySelector('.nav-menu');
-            
+
             if (hamburger && navMenu) {
                 hamburger.addEventListener('click', () => {
                     navMenu.classList.toggle('active');
                 });
-                
+
                 document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-link').forEach(link => {
                     link.addEventListener('click', () => {
                         navMenu.classList.remove('active');
