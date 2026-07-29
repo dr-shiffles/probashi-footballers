@@ -1,0 +1,45 @@
+name: Update Database Timestamps
+
+on:
+  push:
+    paths:
+      - 'data/mens.csv'
+      - 'data/women.csv'
+      - 'mens.csv'
+      - 'women.csv'
+  workflow_dispatch:
+
+jobs:
+  update-timestamp:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update lastUpdate.json
+        run: |
+          mkdir -p data
+          
+          # Get ISO timestamp in Zulu format
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          # Write / update JSON file
+          cat <<EOF > data/lastUpdate.json
+          {
+            "lastUpdate": "$TIMESTAMP",
+          }
+          EOF
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lastUpdate.json
+          git commit -m "auto: update timestamp [skip ci]" || exit 0
+          git push
+
