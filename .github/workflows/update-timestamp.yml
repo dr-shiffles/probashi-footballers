@@ -31,8 +31,7 @@ jobs:
           # Write / update JSON file
           cat <<EOF > data/lastUpdate.json
           {
-            "men": "$TIMESTAMP",
-            "women": "$TIMESTAMP"
+            "lastUpdate": "$TIMESTAMP",
           }
           EOF
 
