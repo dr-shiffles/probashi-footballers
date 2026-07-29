@@ -46,12 +46,12 @@ jobs:
             
             let updated = false;
             // Check if mens.csv or equivalent changed
-            if (changedFiles.some(f => f.includes("data/mens.csv"))) {
+            if (changedFiles.some(f => f.includes("mens.csv"))) {
               data.men = time;
               updated = true;
             }
             // Check if women.csv or equivalent changed
-            if (changedFiles.some(f => f.includes("data/women.csv"))) {
+            if (changedFiles.some(f => f.includes("women.csv"))) {
               data.women = time;
               updated = true;
             }
