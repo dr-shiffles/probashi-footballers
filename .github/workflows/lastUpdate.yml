@@ -1,0 +1,72 @@
+name: Update Database Timestamp
+
+on:
+  push:
+    paths:
+      - 'data/mens.csv'   # Adjust the path if your CSVs are located elsewhere (e.g., data/mens.csv)
+      - 'data/women.csv'  # Adjust the path if your CSVs are located elsewhere (e.g., data/women.csv)
+
+jobs:
+  update-timestamp:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push commits back to the repo
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js (or run a quick script)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update lastUpdate.json
+        run: |
+          # Get the current ISO 8601 Zulu timestamp
+          CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Check which file(s) changed in this commit
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          
+          # Path to your JSON file
+          JSON_FILE="data/lastUpdate.json"
+          
+          # Ensure jq is available or use node/python to safely update JSON
+          node -e '
+            const fs = require("fs");
+            const file = "'$JSON_FILE'";
+            const time = "'$CURRENT_TIME'";
+            let data = JSON.parse(fs.readFileSync(file, "utf8"));
+            
+            const changedFiles = process.argv.slice(2);
+            
+            let updated = false;
+            // Check if mens.csv or equivalent changed
+            if (changedFiles.some(f => f.includes("mens.csv"))) {
+              data.men = time;
+              updated = true;
+            }
+            // Check if women.csv or equivalent changed
+            if (changedFiles.some(f => f.includes("women.csv"))) {
+              data.women = time;
+              updated = true;
+            }
+            
+            if (updated) {
+              fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+              console.log("Updated lastUpdate.json successfully.");
+            } else {
+              console.log("No matching CSV found in changed files.");
+            }
+          ' $CHANGED_FILES
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/lastUpdate.json
+          
+          # Only commit if there are actual changes to the JSON file
+          git diff --staged --quiet || (git commit -m "chore: update database last modified timestamp [skip ci]" && git push)
+
