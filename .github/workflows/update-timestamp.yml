@@ -5,7 +5,8 @@ on:
     paths:
       - 'data/mens.csv'   # Adjust the path if your CSVs are located elsewhere (e.g., data/mens.csv)
       - 'data/women.csv'  # Adjust the path if your CSVs are located elsewhere (e.g., data/women.csv)
-
+  workflow_dispatch:
+    
 jobs:
   update-timestamp:
     runs-on: ubuntu-latest
