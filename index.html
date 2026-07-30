@@ -95,7 +95,15 @@
                     </select>
                 </div>
 
-                <!-- NEW: National Team Filter -->
+                <!-- Club Tier Filter -->
+                <div class="filter-group">
+                    <label for="tierFilter"><i class="fas fa-signal"></i> Club Tier:</label>
+                        <select id="tierFilter">
+                            <!-- Populated dynamically from data -->
+                        </select>
+                </div>
+
+                <!-- National Team Filter -->
                 <div class="filter-group">
                     <label for="ntFilter"><i class="fas fa-flag-checkered"></i> National Team Appearance</label>
                     <select id="ntFilter">
@@ -160,13 +168,14 @@
 
         <!--- Latest updates -->
         <div class="last-update">
+            <p>Database Last Updated on: <span id="lastUpdate"></span> </p>
             <p style="font-weight: bold; margin-top: 15px; margin-bottom: 8px; color: #274e13;">
                  Most Recently Added/Updated Players:
             </p>
             <ul id="recentUpdatesList" class="recent-updates-list"></ul>
         </div>
+
         <footer>
-            <p>Database Revision: <span id="lastUpdate"></span></p>
             <p>
                 © 2025-2026 Probashi-Footballers.com<br />
                 Made with ♥ in Canada & USA<br />
