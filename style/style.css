@@ -36,7 +36,7 @@ body {
     padding: 20px;
 }
 
-/* NEW: Two-column layout for filters and content */
+/* Two-column layout for filters and content */
 .main-layout {
     display: flex;
     gap: 20px;
@@ -45,7 +45,7 @@ body {
 
 /* Sidebar filter panel */
 .filter-sidebar {
-    width: 280px;
+    width: 225px;
     flex-shrink: 0;
     background-color: #f8f9fa;
     border-radius: 8px;
