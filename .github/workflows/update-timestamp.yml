@@ -1,13 +1,12 @@
-name: Update Database Timestamps
+name: Update Last Update Timestamp
 
 on:
   push:
     paths:
       - 'data/mens.csv'
       - 'data/women.csv'
-      - 'mens.csv'
-      - 'women.csv'
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   update-timestamp:
@@ -16,30 +15,84 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Update lastUpdate.json
+      - name: Get commit timestamps
+        id: get_timestamps
         run: |
-          mkdir -p data
-          
-          # Get ISO timestamp in Zulu format
-          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          # Get timestamp for mens.csv
+          MEN_TIMESTAMP=$(git log -1 --format=%ct -- data/mens.csv 2>/dev/null || echo "")
+          # Get timestamp for women.csv
+          WOMEN_TIMESTAMP=$(git log -1 --format=%ct -- data/women.csv 2>/dev/null || echo "")
 
-          # Write / update JSON file
-          cat <<EOF > data/lastUpdate.json
+          # Convert to ISO format
+          if [ -n "$MEN_TIMESTAMP" ]; then
+            MEN_ISO=$(date -d "@$MEN_TIMESTAMP" -Iseconds)
+          else
+            MEN_ISO=""
+          fi
+
+          if [ -n "$WOMEN_TIMESTAMP" ]; then
+            WOMEN_ISO=$(date -d "@$WOMEN_TIMESTAMP" -Iseconds)
+          else
+            WOMEN_ISO=""
+          fi
+
+          # Get the latest of the two
+          if [ -n "$MEN_TIMESTAMP" ] && [ -n "$WOMEN_TIMESTAMP" ]; then
+            if [ "$MEN_TIMESTAMP" -gt "$WOMEN_TIMESTAMP" ]; then
+              LATEST_ISO="$MEN_ISO"
+            else
+              LATEST_ISO="$WOMEN_ISO"
+            fi
+          elif [ -n "$MEN_TIMESTAMP" ]; then
+            LATEST_ISO="$MEN_ISO"
+          elif [ -n "$WOMEN_TIMESTAMP" ]; then
+            LATEST_ISO="$WOMEN_ISO"
+          else
+            LATEST_ISO=$(date -Iseconds)
+          fi
+
+          echo "MEN_ISO=$MEN_ISO" >> $GITHUB_OUTPUT
+          echo "WOMEN_ISO=$WOMEN_ISO" >> $GITHUB_OUTPUT
+          echo "LATEST_ISO=$LATEST_ISO" >> $GITHUB_OUTPUT
+
+      - name: Count players
+        id: count_players
+        run: |
+          MEN_COUNT=0
+          WOMEN_COUNT=0
+
+          if [ -f "data/mens.csv" ]; then
+            MEN_COUNT=$(tail -n +2 data/mens.csv | grep -c '^' || echo 0)
+          fi
+
+          if [ -f "data/women.csv" ]; then
+            WOMEN_COUNT=$(tail -n +2 data/women.csv | grep -c '^' || echo 0)
+          fi
+
+          echo "MEN_COUNT=$MEN_COUNT" >> $GITHUB_OUTPUT
+          echo "WOMEN_COUNT=$WOMEN_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Create lastUpdate.json
+        run: |
+          cat > data/lastUpdate.json << EOF
           {
-            "lastUpdate": "$TIMESTAMP",
+            "lastUpdate": "${{ steps.get_timestamps.outputs.LATEST_ISO }}",
+            "menLastUpdate": "${{ steps.get_timestamps.outputs.MEN_ISO }}",
+            "womenLastUpdate": "${{ steps.get_timestamps.outputs.WOMEN_ISO }}",
+            "menCount": ${{ steps.count_players.outputs.MEN_COUNT }},
+            "womenCount": ${{ steps.count_players.outputs.WOMEN_COUNT }}
           }
           EOF
 
-      - name: Commit and push changes
+      - name: Commit and push
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/lastUpdate.json
-          git commit -m "auto: update timestamp [skip ci]" || exit 0
+          git diff --staged --quiet || git commit -m "chore: update lastUpdate.json timestamp"
           git push
-
