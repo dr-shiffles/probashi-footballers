@@ -213,11 +213,11 @@ function populateFilterDropdowns() {
     tierFilter.innerHTML = '<option value="all">All Tiers</option>';
 
     const tierDisplayNames = {
-        'AM': 'AM - Amateur',
-        'CL': 'CL - College',
-        'F1': 'F1 - Futsal Div. 1',
-        'YA': 'YA - Youth Academy',
-        '-': '- (N/A / Unassigned)'
+        'AM': 'Amateur',
+        'CL': 'College',
+        'FS': 'Futsal',
+        'YA': 'Youth Academy',
+        '-': 'Unattached'
     };
 
     const sortedTiers = Array.from(tierOptions).sort((a, b) => {
