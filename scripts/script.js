@@ -2,10 +2,11 @@
 let playersData = [];
 let filteredData = [];
 let currentPage = 1;
-const rowsPerPage = 8;
+const rowsPerPage = 10;
 let positionOptions = new Set();
 let birthYearOptions = new Set();
 let countryOptions = new Set();
+let tierOptions = new Set();
 
 // DOM Elements
 const tableBody = document.getElementById('tableBody');
@@ -13,7 +14,8 @@ const nameFilter = document.getElementById('nameFilter');
 const positionFilter = document.getElementById('positionFilter');
 const birthYearFilter = document.getElementById('birthYearFilter');
 const countryFilter = document.getElementById('countryFilter');
-const ntFilter = document.getElementById('ntFilter'); // NEW
+const tierFilter = document.getElementById('tierFilter');
+const ntFilter = document.getElementById('ntFilter');
 const resetFiltersBtn = document.getElementById('resetFilters');
 const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
@@ -21,33 +23,13 @@ const pageInfo = document.getElementById('pageInfo');
 const rowCount = document.getElementById('rowCount');
 const lastUpdate = document.getElementById('lastUpdate');
 
-// Helper function to robustly parse date strings from the CSV (Index 16: Last Update)
-function parseUpdateDate(dateStr) {
-    if (!dateStr || dateStr === "Status Unknown" || dateStr === "-") return null;
-    
-    // Handle MM/DD/YYYY or M/D/YY formats
-    if (dateStr.includes('/')) {
-        const dateParts = dateStr.split('/');
-        if (dateParts.length === 3) {
-            let year = dateParts[2].trim();
-            if (year.length === 2) year = '20' + year; // Convert 26 to 2026
-            const month = parseInt(dateParts[0], 10) - 1;
-            const day = parseInt(dateParts[1], 10);
-            const date = new Date(year, month, day);
-            return isNaN(date.getTime()) ? null : date;
-        }
-    }
-    
-    // Fallback standard JS date parse (e.g. YYYY-MM-DD)
-    const fallbackDate = new Date(dateStr);
-    return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
-}
-
 // Load and parse CSV data
 async function loadCSVData(csvFilename = 'data/mens.csv') {
+    // Load last update info FIRST
+    await loadLastUpdateInfo();
+
     playersData = await parseCSVData(csvFilename);
 
-    // Remove header row if present
     if (playersData.length > 0) {
         const firstRow = playersData[0];
         if (firstRow[0] === "Given Names(s)" || firstRow[0].includes("Given Names")) {
@@ -55,8 +37,7 @@ async function loadCSVData(csvFilename = 'data/mens.csv') {
         }
     }
 
-    // Sort by sorting string column (last column in data)
-    // Unattached players (starting with ~~~) go to the bottom
+    // Sort by sorting string column
     playersData.sort((a, b) => {
         const sortA = a[a.length - 1] || '';
         const sortB = b[b.length - 1] || '';
@@ -71,23 +52,47 @@ async function loadCSVData(csvFilename = 'data/mens.csv') {
         return isUnattachedA ? 1 : -1;
     });
 
-    // Extract filter options
     extractFilterOptions();
-
-    // Populate filter dropdowns
     populateFilterDropdowns();
 
-    // Initialize filtered data
     filteredData = [...playersData];
-
-    // Update the table
     updateTable();
-
-    // Update last update date in footer
-    updateLastUpdateDate();
-
-    // NEW: Display the most recently updated players list
     displayRecentUpdates();
+}
+
+// NEW: Load last update info from JSON
+async function loadLastUpdateInfo() {
+    try {
+        const response = await fetch('data/lastUpdate.json');
+        if (response.ok) {
+            const data = await response.json();
+
+            // Update the last update date
+            if (data.lastUpdate) {
+                const date = new Date(data.lastUpdate);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZoneName: 'short'
+                });
+                lastUpdate.textContent = formattedDate;
+            }
+
+            // Also store in a global for use elsewhere if needed
+            window.lastUpdateData = data;
+
+            console.log('Last update info loaded:', data);
+        } else {
+            console.warn('lastUpdate.json not found, using fallback');
+            lastUpdate.textContent = 'Unknown (JSON file not found)';
+        }
+    } catch (error) {
+        console.error('Error loading lastUpdate.json:', error);
+        lastUpdate.textContent = 'Unknown (Error loading)';
+    }
 }
 
 // Parse CSV data
@@ -101,13 +106,7 @@ async function parseCSVData(csvFilename) {
         return parseCSV(csvText);
     } catch (error) {
         console.error('Error loading CSV:', error);
-
-        if (csvFilename === 'data/women.csv') {
-            alert('Women\'s data file (women.csv) not found. Please ensure the file exists in the same directory. For now, showing empty table.');
-        } else {
-            alert('Men\'s data file (mens.csv) not found. Please ensure the file exists in the same directory. For now, showing empty table.');
-        }
-
+        alert(`Data file (${csvFilename}) not found. Please ensure the file exists.`);
         return [];
     }
 }
@@ -147,10 +146,10 @@ function parseCSV(csvText) {
 
 // Extract unique values for filter dropdowns
 function extractFilterOptions() {
-    // Clear existing options
     positionOptions.clear();
     birthYearOptions.clear();
     countryOptions.clear();
+    tierOptions.clear();
 
     playersData.forEach(player => {
         // Positions (index 2)
@@ -161,26 +160,27 @@ function extractFilterOptions() {
             });
         }
 
-        // Birth years (index 3 - YYYY)
+        // Birth years (index 3)
         if (player[3] && player[3] !== "Unknown" && player[3] !== "??") {
             birthYearOptions.add(player[3]);
         }
 
-        // Countries (index 9 - Country)
+        // Countries (index 9)
         if (player[9]) {
             countryOptions.add(player[9]);
+        }
+
+        // Tiers (index 10)
+        if (player[10] && player[10] !== '' && player[10] !== '???') {
+            tierOptions.add(player[10]);
         }
     });
 }
 
 // Populate filter dropdowns with options
 function populateFilterDropdowns() {
-    // Clear existing options except "All"
+    // Position
     positionFilter.innerHTML = '<option value="">All Positions</option>';
-    birthYearFilter.innerHTML = '<option value="">All Years</option>';
-    countryFilter.innerHTML = '<option value="">All Countries</option>';
-
-    // Populate positions
     const sortedPositions = Array.from(positionOptions).sort();
     sortedPositions.forEach(position => {
         const option = document.createElement('option');
@@ -189,7 +189,8 @@ function populateFilterDropdowns() {
         positionFilter.appendChild(option);
     });
 
-    // Populate birth years
+    // Birth Year
+    birthYearFilter.innerHTML = '<option value="">All Years</option>';
     const sortedYears = Array.from(birthYearOptions).sort((a, b) => b - a);
     sortedYears.forEach(year => {
         const option = document.createElement('option');
@@ -198,7 +199,8 @@ function populateFilterDropdowns() {
         birthYearFilter.appendChild(option);
     });
 
-    // Populate countries
+    // Country
+    countryFilter.innerHTML = '<option value="">All Countries</option>';
     const sortedCountries = Array.from(countryOptions).sort();
     sortedCountries.forEach(country => {
         const option = document.createElement('option');
@@ -206,14 +208,43 @@ function populateFilterDropdowns() {
         option.textContent = country;
         countryFilter.appendChild(option);
     });
+
+    // Tier - Dynamically populated
+    tierFilter.innerHTML = '<option value="all">All Tiers</option>';
+
+    const tierDisplayNames = {
+        'AM': 'AM - Amateur',
+        'CL': 'CL - College',
+        'F1': 'F1 - Futsal Div. 1',
+        'YA': 'YA - Youth Academy',
+        '-': '- (N/A / Unassigned)'
+    };
+
+    const sortedTiers = Array.from(tierOptions).sort((a, b) => {
+        const aIsNum = !isNaN(a) && a !== '';
+        const bIsNum = !isNaN(b) && b !== '';
+
+        if (aIsNum && bIsNum) {
+            return parseInt(a, 10) - parseInt(b, 10);
+        }
+        if (aIsNum) return -1;
+        if (bIsNum) return 1;
+        return a.localeCompare(b);
+    });
+
+    sortedTiers.forEach(tier => {
+        const option = document.createElement('option');
+        option.value = tier;
+        option.textContent = tierDisplayNames[tier] || `Tier ${tier}`;
+        tierFilter.appendChild(option);
+    });
 }
 
-// NEW: Helper function to determine NT category
+// Helper function to determine NT category
 function getNTCategory(ntValue) {
     if (!ntValue || ntValue === '-' || ntValue === '') {
         return 'none';
     }
-    // Check if it contains BAN (Bangladesh)
     if (ntValue.toUpperCase().includes('BAN')) {
         return 'bangladesh';
     }
@@ -226,16 +257,17 @@ function applyFilters() {
     const positionFilterValue = positionFilter.value;
     const birthYearFilterValue = birthYearFilter.value;
     const countryFilterValue = countryFilter.value;
-    const ntFilterValue = ntFilter ? ntFilter.value : 'all'; // NEW
+    const tierFilterValue = tierFilter ? tierFilter.value : 'all';
+    const ntFilterValue = ntFilter ? ntFilter.value : 'all';
 
     filteredData = playersData.filter(player => {
-        // Name filter (combine first and last name - indices 0 and 1)
+        // Name filter
         const fullName = (player[0] + ' ' + player[1]).toLowerCase();
         if (nameFilterValue && !fullName.includes(nameFilterValue)) {
             return false;
         }
 
-        // Position filter (index 2)
+        // Position filter
         if (positionFilterValue && player[2]) {
             const positions = player[2].split(',').map(p => p.trim());
             if (!positions.includes(positionFilterValue)) {
@@ -243,17 +275,25 @@ function applyFilters() {
             }
         }
 
-        // Birth year filter (index 3)
+        // Birth year filter
         if (birthYearFilterValue && player[3] !== birthYearFilterValue) {
             return false;
         }
 
-        // Country filter (index 9)
+        // Country filter
         if (countryFilterValue && player[9] !== countryFilterValue) {
             return false;
         }
 
-        // NEW: National Team filter (index 12)
+        // Tier filter
+        if (tierFilterValue && tierFilterValue !== 'all') {
+            const tierValue = player[10] || '';
+            if (tierValue.toUpperCase() !== tierFilterValue.toUpperCase()) {
+                return false;
+            }
+        }
+
+        // NT filter
         if (ntFilterValue && ntFilterValue !== 'all') {
             const ntValue = player[12];
             const ntCategory = getNTCategory(ntValue);
@@ -265,37 +305,33 @@ function applyFilters() {
         return true;
     });
 
-    // Reset to first page
     currentPage = 1;
-
-    // Update table
     updateTable();
 }
 
 // Set up event listeners
 function setupEventListeners() {
-    // Filter inputs
     nameFilter.addEventListener('input', applyFilters);
     positionFilter.addEventListener('change', applyFilters);
     birthYearFilter.addEventListener('change', applyFilters);
     countryFilter.addEventListener('change', applyFilters);
+    if (tierFilter) {
+        tierFilter.addEventListener('change', applyFilters);
+    }
     if (ntFilter) {
-        ntFilter.addEventListener('change', applyFilters); // NEW
+        ntFilter.addEventListener('change', applyFilters);
     }
 
-    // Reset filters button
     resetFiltersBtn.addEventListener('click', () => {
         nameFilter.value = '';
         positionFilter.value = '';
         birthYearFilter.value = '';
         countryFilter.value = '';
-        if (ntFilter) {
-            ntFilter.value = 'all'; // NEW
-        }
+        if (tierFilter) tierFilter.value = 'all';
+        if (ntFilter) ntFilter.value = 'all';
         applyFilters();
     });
 
-    // Pagination buttons
     prevPageBtn.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
@@ -312,39 +348,30 @@ function setupEventListeners() {
     });
 }
 
-// Update the table with current filtered data
+// Update the table
 function updateTable() {
-    // Clear current table
     tableBody.innerHTML = '';
 
-    // Calculate pagination
     const startIndex = (currentPage - 1) * rowsPerPage;
     const endIndex = Math.min(startIndex + rowsPerPage, filteredData.length);
     const pageData = filteredData.slice(startIndex, endIndex);
 
-    // Populate table rows
     pageData.forEach(player => {
         const row = document.createElement('tr');
-
-        // Skip the last column (Sorting String at index 17)
         for (let i = 0; i < player.length - 1; i++) {
             const cell = document.createElement('td');
             let value = player[i] || '-';
-            // Clean up empty values
             if (value === '??' || value === 'Unknown' || value === '') {
                 value = '-';
             }
             cell.textContent = value;
             row.appendChild(cell);
         }
-
         tableBody.appendChild(row);
     });
 
-    // Update pagination controls
     updatePagination();
 
-    // Update row count
     if (filteredData.length > 0) {
         rowCount.textContent = `Showing ${startIndex + 1}-${endIndex} of ${filteredData.length} players`;
     } else {
@@ -355,64 +382,56 @@ function updateTable() {
 // Update pagination controls
 function updatePagination() {
     const totalPages = Math.ceil(filteredData.length / rowsPerPage) || 1;
-
-    // Update page info
     pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-
-    // Enable/disable buttons
     prevPageBtn.disabled = currentPage <= 1;
     nextPageBtn.disabled = currentPage >= totalPages;
 
-    // If no data, show message
     if (filteredData.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="17" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
-        rowCount.textContent = `Showing 0 of 0 players`;
+        rowCount.textContent = 'Showing 0 of 0 players';
     }
 }
 
-// Update the last update date in footer
-function updateLastUpdateDate() {
-    let latestDate = null;
+// Helper function to parse update dates from the recent updates list
+// This is only used for the "Most Recently Added/Updated" section
+function parseDateFromCSV(dateStr) {
+    if (!dateStr || dateStr === "Status Unknown" || dateStr === "-") return null;
 
-    playersData.forEach(player => {
-        const date = parseUpdateDate(player[16]); // Last Update column (index 16)
-        if (date && (!latestDate || date > latestDate)) {
-            latestDate = date;
+    if (dateStr.includes('/')) {
+        const dateParts = dateStr.split('/');
+        if (dateParts.length === 3) {
+            let year = dateParts[2].trim();
+            if (year.length === 2) year = '20' + year;
+            const month = parseInt(dateParts[0], 10) - 1;
+            const day = parseInt(dateParts[1], 10);
+            const date = new Date(year, month, day);
+            return isNaN(date.getTime()) ? null : date;
         }
-    });
-
-    if (latestDate) {
-        const formattedDate = latestDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        lastUpdate.textContent = formattedDate;
-    } else {
-        lastUpdate.textContent = "December 2025";
     }
+
+    const fallbackDate = new Date(dateStr);
+    return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
 }
 
-// NEW: Compiles, sorts, and lists the 5 most recently updated entries
+// Display recent updates
 function displayRecentUpdates() {
     const recentContainer = document.getElementById('recentUpdatesList');
-    if (!recentContainer) return; // Guard clause if element doesn't exist
+    if (!recentContainer) return;
 
-    // Clear previous elements
     recentContainer.innerHTML = '';
 
-    // Filter out rows without valid dates, map to objects containing parsed dates
+    // Filter players with valid update dates
     const playersWithDates = playersData
-        .map(player => ({
-            data: player,
-            parsedDate: parseUpdateDate(player[16])
-        }))
-        .filter(item => item.parsedDate !== null);
+    .map(player => ({
+        data: player,
+        parsedDate: parseDateFromCSV(player[16]) // Last Update column
+    }))
+    .filter(item => item.parsedDate !== null);
 
-    // Sort by date descending (Newest first)
+    // Sort by date descending (newest first)
     playersWithDates.sort((a, b) => b.parsedDate - a.parsedDate);
 
-    // Pick top 5 newest items
+    // Take top 5
     const topRecent = playersWithDates.slice(0, 5);
 
     if (topRecent.length === 0) {
@@ -420,7 +439,6 @@ function displayRecentUpdates() {
         return;
     }
 
-    // Build the list elements
     topRecent.forEach(item => {
         const p = item.data;
         const firstName = p[0] || '';
@@ -434,9 +452,9 @@ function displayRecentUpdates() {
 
         const li = document.createElement('li');
         li.innerHTML = `
-            <strong>${firstName} ${lastName}</strong>
-            <span class="update-details">${position} | Current Club: ${club} (${country}-${clubTier}) | Notes: ${notes}</span>
-            <span class="update-tag">Updated: ${rawDate}</span>
+        <strong>${firstName} ${lastName}</strong>
+        <span class="update-details">${position} | Current Club: ${club} (${country}-${clubTier}) | Notes: ${notes}</span>
+        <span class="update-tag">Updated: ${rawDate}</span>
         `;
         recentContainer.appendChild(li);
     });
