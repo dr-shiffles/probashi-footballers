@@ -19,7 +19,8 @@ The database is compiled from following sources:
 5. Community submissions from supporters
 
 # Want to Contribute?
-If you want to help contribute to the database by providing new player information, existing player updates, etc; please feel free to send me a DM on [Twitter/X (@dr_shiffles)](https://x.com/dr_shiffles) or send me a message on Transfermarkt (drshiffles).
+If you want to help contribute to the database by providing new player information, existing player updates, etc; please feel free to send me a DM on [Twitter/X (@probashisoccer)](https://x.com/probashisoccer) or contact me via the contact form on the website. 
+Since this is on Github, you can also open a pull request on the database files located at data/mens.csv or data/women.csv
 
 # Want to fork this website for other countries?
 Sure! Generally everything should work, as long as your database follows the same formatting. 
