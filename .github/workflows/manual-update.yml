@@ -35,5 +35,5 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add men.csv women.csv
+          git add data/women.csv data/mens.csv data/men.csv
           git diff --staged --quiet || (git commit -m "Manual update: age and sorting string columns" && git push)
