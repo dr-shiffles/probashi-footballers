@@ -3,12 +3,11 @@ name: Automatic Age & Sorting String Update
 on:
   push:
     paths:
-      - 'women.csv'
-      - 'men.csv'
+      - 'data/women.csv'
+      - 'data/mens.csv'
     branches:
       - main
-      - master
-
+      
 jobs:
   update-database:
     runs-on: ubuntu-latest
