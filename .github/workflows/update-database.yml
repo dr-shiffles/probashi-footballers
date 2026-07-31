@@ -1,10 +1,10 @@
-name: Automatic Age & Sorting String Update
+name: Update Age & Sorting String (Automatic)
 
 on:
   push:
     paths:
-      - 'women.csv'
-      - 'men.csv'
+      - 'data/women.csv'
+      - 'data/mens.csv'
     branches:
       - main
       - master
@@ -27,6 +27,13 @@ jobs:
         with:
           python-version: '3.10'
       
+      - name: List files for debugging
+        run: |
+          echo "Repository structure:"
+          ls -la
+          echo "Data directory:"
+          ls -la data/ || echo "data/ directory not found"
+      
       - name: Run update script
         run: |
           python .github/scripts/update_csv.py
@@ -35,5 +42,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add women.csv men.csv
+          # Only add files that actually exist
+          if [ -f "data/women.csv" ]; then git add data/women.csv; fi
+          if [ -f "data/mens.csv" ]; then git add data/mens.csv; fi
           git diff --staged --quiet || (git commit -m "Auto-update: age and sorting string columns" && git push)
