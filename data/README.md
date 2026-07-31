@@ -45,8 +45,6 @@ Place this in cell **R2** and autofill down:
 - Concatenates key fields for easier sorting
 - The website's JavaScript handles sorting automatically, but this column helps when manually reviewing the file
 
----
-
 ### Optional: Apply AutoFilter
 To make manual editing easier:
 
@@ -56,8 +54,6 @@ To make manual editing easier:
 
 This groups similar players together and makes the file easy to read.
 
----
-
 ## Automation Scripts
 
 When changes are pushed to this folder, a **GitHub Action** automatically:
@@ -66,8 +62,6 @@ When changes are pushed to this folder, a **GitHub Action** automatically:
 - Updates `lastUpdate.json` with the current timestamp
 
 This timestamp is displayed at the bottom of the website to show when the database was last modified.
-
----
 
 ## Check Website Was Updated
 
