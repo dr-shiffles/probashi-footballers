@@ -1,5 +1,4 @@
 # This script will update the age and sorting string columns of mens.csv and women.csv whenever there is a commit to these files.
-
 import csv
 import os
 from datetime import datetime
@@ -115,12 +114,19 @@ def process_csv_file(filepath):
     """Process a single CSV file"""
     print(f"Processing {filepath}...")
     
+    # Check if file exists
+    if not os.path.exists(filepath):
+        print(f"  File not found: {filepath}")
+        return False
+    
     # Read the CSV file
     rows = []
     with open(filepath, 'r', encoding='utf-8') as file:
         reader = csv.reader(file)
         header = next(reader)  # Read header
         rows = list(reader)
+    
+    print(f"  Found {len(rows)} rows of data")
     
     # Find column indices for Age and Sorting String
     try:
@@ -146,7 +152,7 @@ def process_csv_file(filepath):
                 return False
         
         # Ensure all rows have enough columns
-        max_cols = max(len(row) for row in rows)
+        max_cols = max(len(row) for row in rows) if rows else 0
         needed_cols = max(age_idx, sort_idx, len(header)) + 1
         
         if max_cols < needed_cols:
@@ -200,10 +206,10 @@ def main():
     # Get the repository root
     repo_root = os.getenv('GITHUB_WORKSPACE', '.')
     
-    # Define CSV files to process
+    # Define CSV files to process - now in data/ folder
     csv_files = [
-        os.path.join(repo_root, 'women.csv'),
-        os.path.join(repo_root, 'men.csv'),
+        os.path.join(repo_root, 'data', 'women.csv'),
+        os.path.join(repo_root, 'data', 'mens.csv'),  # Note: you had 'mens.csv' in your error
     ]
     
     success = True
@@ -213,6 +219,15 @@ def main():
                 success = False
         else:
             print(f"File not found: {csv_file}")
+            # Try alternative naming
+            alternative = csv_file.replace('mens.csv', 'men.csv')
+            if os.path.exists(alternative):
+                print(f"  Trying alternative: {alternative}")
+                if not process_csv_file(alternative):
+                    success = False
+            else:
+                print(f"  Also not found: {alternative}")
+                success = False
     
     if success:
         print("All files processed successfully!")

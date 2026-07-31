@@ -1,4 +1,4 @@
-name: Update Age & Sorting String (Automatic)
+name: Update Database Automatically
 
 on:
   push:

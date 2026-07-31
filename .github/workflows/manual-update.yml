@@ -1,4 +1,4 @@
-name: Update Age & Sorting String (Manual)
+name: Manual Database Update
 
 on:
   workflow_dispatch:
