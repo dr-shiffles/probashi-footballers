@@ -8,12 +8,13 @@ This folder contains the Player Database split into two separate files by gender
 These files are updated manually. It is highly recommended that these files be downloaded first and edited locally, instead of using GitHub's web interface directly.
 
 ## Folder Structure
-
+```
 data/
 ├── mens.csv           # Men's player database
 ├── women.csv          # Women's player database
 ├── lastUpdate.json    # Auto-updated timestamp file
 └── README.md          # This file
+```
 
 ## Editing the Files
 
