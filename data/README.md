@@ -1,26 +1,78 @@
 # Data Folder
-This folder contains the Player Database in 2 separate files by gender, 'mens.csv' and 'women.csv'. The data in these 2 files are updated manually.
 
-Once the files are updated, a Github worker/action is used to update the 'lastUpdate.json' file to record the last time there was a change to the database. This date is to be presented at the bottom of the website (WIP)
+This folder contains the Player Database split into two separate files by gender:
 
-## Editing the File
-Please use LibreOffice Calc to edit the .csv file for best compatibility and to avoid issues with data formats being changed without your knowledge. 
+- **`mens.csv`** – Men's player data
+- **`women.csv`** – Women's player data
 
-For example, Microsoft Excel has a habit of changing the values in column E to dates ending in the current year the file is opened, i.e. 10/12 becomes 10/12/2026. This breaks the age calculation formula below. LibreOffice Calc treats this column as text. 
+These files are updated manually. It is highly recommended that these files be downloaded first and edited locally, instead of using GitHub's web interface directly.
 
-## Formulae to use for .CSV file when modifying:
+## Folder Structure
+```
+data/
+├── mens.csv           # Men's player database
+├── women.csv          # Women's player database
+├── lastUpdate.json    # Auto-updated timestamp file
+└── README.md          # This file
+```
 
-**Age (Column F):** 
+## Editing the Files
+
+Please use a spreadsheet editor to edit these files. **LibreOffice Calc** is recommended for best compatibility.
+
+### Editing Checklist
+
+1. Open the `.csv` file in LibreOffice Calc (or another spreadsheet editor)
+2. Add or update player rows as needed
+3. Ensure formulas in columns **F** and **R** are applied to all rows
+4. Save the file as `.csv` (UTF-8 encoding recommended)
+5. Commit and push the changes
+
+## Formulas to Use
+
+### Age (Column F)
+Place this in cell **F2** and autofill down:
 
 `=IFERROR(IFERROR(DATEDIF(E2&"/"&D2,TODAY(),"Y"),DATEDIF("1/1/"&D2,TODAY(),"Y")),"??")`
 
-Put this in cell **F2** when editing the .csv in LibreOffice and autofill.
+- Calculates age based on birth date (month/day in column E, year in column D)  
+- Falls back to `??` if data is missing or invalid
 
-**Sorting Function (Column R):** 
+### Sorting Helper (Column R)
+Place this in cell **R2** and autofill down:
 
 `=J2&","&B2&","&A2&","&D2&","&I2`
 
-Put this in cell **R2** when editing the .csv in LibreOffice and autofill.
+- Concatenates key fields for easier sorting
+- The website's JavaScript handles sorting automatically, but this column helps when manually reviewing the file
 
-The JavaScript on the website should automatically sort the data when presenting it. 
-However, you can apply an AutoFilter on Row 1, and sort column R by Ascending to make it easier to read when editing the file later. 
+### Optional: Apply AutoFilter
+To make manual editing easier:
+
+1. Select Row 1
+2. Apply **AutoFilter**
+3. Sort column **R** in Ascending order
+
+This groups similar players together and makes the file easy to read.
+
+## Automation Scripts
+
+When changes are pushed to this folder, a **GitHub Action** automatically:
+
+- Detects the update
+- Updates `lastUpdate.json` with the current timestamp
+
+This timestamp is displayed at the bottom of the website to show when the database was last modified.
+
+## Check Website Was Updated
+
+After editing and pushing:
+
+1. Wait for the GitHub Action to complete (check the Actions tab)
+2. Verify `lastUpdate.json` was updated
+3. Visit the live site to confirm the data appears correctly
+   - You may need to use incognito/private mode to bypass cached content
+
+## Questions?
+
+If you run into any issues, please open an issue in the repository or reach out to me via Twitter/X.
