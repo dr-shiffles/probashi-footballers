@@ -1,4 +1,4 @@
-![image](img/logo_512x512.png)
+![image](img/logo_48x48.png)
 
 # Probashi-Footballers.com
 **Tracking the global pipeline of Bangladeshi football talent.**
