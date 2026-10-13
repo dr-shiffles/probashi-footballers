@@ -206,3 +206,21 @@ The AI should not:
 - Modify lastUpdate.json
 - Introduce unnecessary technologies
 - Delete historical information without approval
+
+## Update Reports
+
+Database updates are summarized in changelog files.
+
+Purpose:
+
+- Internal history
+- Source for social media posts
+- Historical audit trail
+
+Preferred format:
+
+changelog/YYYY-MM-DD.md
+
+The AI should help generate and maintain changelog files whenever updates are made.
+
+Screenshots used on social media are temporary artifacts and do not need to be stored.
