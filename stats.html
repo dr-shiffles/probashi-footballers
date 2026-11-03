@@ -19,7 +19,6 @@
                 Probashi Footballers
             </div>
             <ul class="nav-menu">
-            <ul class="nav-menu">
                 <li class="nav-item">
                     <a href="index.html" class="nav-link">
                        Men
@@ -44,6 +43,7 @@
                     <a href="about.html" class="nav-link">
                         About
                     </a>
+                </li>
                 <li class="nav-item">
                     <a href="contact.html" class="nav-link">
                         Contact
@@ -76,7 +76,6 @@
         <!-- ==========================================================================
              FIRST ROW: Dual-National Count & National Team Callups (3 Columns)
              ========================================================================== -->
-        <!-- FIXED: Changed '3-col-row' to 'three-col-row' -->
         <div class="stats-row three-col-row">
 
             <!-- Column 1: Total Count of Dual-National Players -->
@@ -141,10 +140,22 @@
             </div>
         </div>
 
-        <!-- ==========================================================================
-             SECOND ROW: Countries Represented & Top 5 Countries Tables (3 Columns)
-             ========================================================================== -->
-        <!-- FIXED: Changed '3-col-row' to 'three-col-row' -->
+        <!-- SECOND ROW: Geographic Distribution Heatmap (full width) -->
+        <div class="full-width-row" style="margin-top: 40px;">
+            <div class="stats-section grid-col">
+                <h2 class="section-title">Geographic Distribution of Players</h2>
+
+                <div id="heatmap-tabs" class="heatmap-tabs">
+                    <button data-heatmap-view="combined" class="heatmap-tab active">Combined</button>
+                    <button data-heatmap-view="men"      class="heatmap-tab">Men</button>
+                    <button data-heatmap-view="women"    class="heatmap-tab">Women</button>
+                </div>
+
+                <div id="player-map"></div>
+            </div>
+        </div>
+
+        <!-- THIRD ROW: Countries Represented & Top 5 Countries Tables (3 Columns)-->
         <div class="stats-row three-col-row" style="margin-top: 20px;">
 
                 <!-- Column 1: Countries Represented (Vertically Stacked Cards) -->
@@ -199,9 +210,7 @@
             </div>
         </div>
 
-        <!-- ==========================================================================
-             THIRD ROW: Position Statistics Table (Stays Centered at Bottom)
-             ========================================================================== -->
+        <!-- FOURTH ROW: Position Statistics Table (Stays Centered at Bottom) -->
         <div class="stats-table-container" style="margin-top: 40px; margin-bottom: 40px;">
             <h2 class="section-title">Players by Position</h2>
 
@@ -255,11 +264,14 @@
                 For the best experience, please open the website on a large screen.
             </p>
         </footer>
-    </div> <!-- FIXED: Closed container div tag here -->
+    </div>
 
-    <!-- FIXED: Loaded countries.js BEFORE stats.js -->
+    <!-- Load scripts in order -->
     <script src="scripts/countries.js"></script>
     <script src="scripts/stats.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script src="scripts/heatmap.js"></script>
+
     <script>
         // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', () => {

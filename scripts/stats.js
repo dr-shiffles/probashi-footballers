@@ -66,13 +66,16 @@ async function loadAllData() {
         // Hide loading state
         document.getElementById('loadingMessage').style.display = 'none';
 
+        // Notify any listeners (e.g. heatmap.js) that data is ready
+        document.dispatchEvent(new Event("stats-data-ready"));
+
     } catch (error) {
         console.error('Error loading data:', error);
         document.getElementById('loadingMessage').innerHTML = 'Error loading database file.';
     }
 }
 
-// Parse CSV function (copied from script.js)
+// Parse CSV function (fixed to handle escaped quotes)
 function parseCSV(csvText) {
     const lines = csvText.trim().split('\n');
     return lines.map(line => {
@@ -82,8 +85,15 @@ function parseCSV(csvText) {
 
         for (let i = 0; i < line.length; i++) {
             const char = line[i];
+            const nextChar = line[i + 1];
+
             if (char === '"') {
-                inQuotes = !inQuotes;
+                if (inQuotes && nextChar === '"') {
+                    currentValue += '"';
+                    i++;
+                } else {
+                    inQuotes = !inQuotes;
+                }
             } else if (char === ',' && !inQuotes) {
                 values.push(currentValue);
                 currentValue = '';
@@ -117,18 +127,18 @@ function getPlayerPositions(player) {
 function categorizePosition(position) {
     if (!position) return 'Unknown';
 
-        const positionUpper = position.toUpperCase().trim();
+    const positionUpper = position.toUpperCase().trim();
 
-        for (const [category, positions] of Object.entries(positionCategories)) {
-            for (const pos of positions) {
-                // Check if the position exactly matches or contains the category code
-                if (positionUpper === pos || positionUpper.includes(pos)) {
-                    return category;
-                }
+    for (const [category, positions] of Object.entries(positionCategories)) {
+        for (const pos of positions) {
+            // Check if the position exactly matches or contains the category code
+            if (positionUpper === pos || positionUpper.includes(pos)) {
+                return category;
             }
         }
+    }
 
-        return 'Other';
+    return 'Other';
 }
 
 // Calculate statistics
@@ -260,34 +270,34 @@ function renderTopCountriesTable(targetElementId, countryCounts) {
     const tableBody = document.getElementById(targetElementId);
     if (!tableBody) return;
 
-        // Sort countries by count (descending) and take top 5
-        const sortedCountries = Object.entries(countryCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
+    // Sort countries by count (descending) and take top 5
+    const sortedCountries = Object.entries(countryCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
 
-        tableBody.innerHTML = '';
+    tableBody.innerHTML = '';
 
-        if (sortedCountries.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 15px; color: #777;">No data available</td></tr>`;
-            return;
-        }
+    if (sortedCountries.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 15px; color: #777;">No data available</td></tr>`;
+        return;
+    }
 
-        sortedCountries.forEach(([code, count], index) => {
-            const rank = index + 1;
+    sortedCountries.forEach(([code, count], index) => {
+        const rank = index + 1;
 
-            // Use global countryCodeMap (from countries.js) if available, fallback to code
-            const displayName = (typeof countryCodeMap !== 'undefined' && countryCodeMap[code]) ? countryCodeMap[code] : code;
+        // Use global countryCodeMap (from countries.js) if available, fallback to code
+        const displayName = (typeof countryCodeMap !== 'undefined' && countryCodeMap[code]) ? countryCodeMap[code] : code;
 
-            const row = document.createElement('tr');
-            row.innerHTML = `
-            <td style="text-align: center; font-weight: bold; width: 60px; color: #115c32;">#${rank}</td>
-            <td class="category-name" style="font-weight: 500;">
-            ${displayName}
-            </td>
-            <td class="number-cell" style="font-weight: bold; text-align: right;">${count.toLocaleString()}</td>
-            `;
-            tableBody.appendChild(row);
-        });
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td style="text-align: center; font-weight: bold; width: 60px; color: #115c32;">#${rank}</td>
+        <td class="category-name" style="font-weight: 500;">
+        ${displayName}
+        </td>
+        <td class="number-cell" style="font-weight: bold; text-align: right;">${count.toLocaleString()}</td>
+        `;
+        tableBody.appendChild(row);
+    });
 }
 
 // Update last updated timestamp from actual data

@@ -57,7 +57,7 @@
 }
 
 /* ==========================================================================
- *  Layout Structures (3-Column Grid)
+ *  Layout Structures (3-Column Grid & Full Width)
  *  ========================================================================== */
 
 /* Defines a row structure containing 3 columns side-by-side */
@@ -74,6 +74,16 @@
     box-sizing: border-box;
 }
 
+/* Full-width row for the heatmap to ensure it spans perfectly */
+.full-width-row {
+    width: 100%;
+    max-width: 1200px;              /* Matches the 1200px max width of 3-col rows */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+}
+
 /* Individual columns inside a 3-column row */
 .grid-col {
     flex: 1 1 0px;                  /* Ensures all normal columns start with the exact same base size */
@@ -81,6 +91,12 @@
     max-width: 480px;               /* Allows columns 2 & 3 to grow and absorb the remaining space of a 1200px row */
     width: 100%;
     box-sizing: border-box;
+}
+
+/* Ensure the grid-col inside the full-width-row expands fully */
+.full-width-row .grid-col {
+    max-width: 100%;
+    width: 100%;
 }
 
 /* Specialized narrow column modifier for "Countries Represented" */
@@ -247,6 +263,45 @@
 
 .section-title i {
     font-size: 18px;
+}
+
+/* ==========================================================================
+ *  Heatmap Specific Styles
+ *  ========================================================================== */
+
+.heatmap-tabs {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.heatmap-tab {
+    padding: 8px 20px;
+    border: 1px solid #b7cdb4;
+    background: #f0f9f5;
+    color: #274e13;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.heatmap-tab:hover {
+    background: #dcefdc;
+}
+
+.heatmap-tab.active {
+    background: #3a6b1a;
+    color: #fff;
+    border-color: #3a6b1a;
+}
+
+#player-map {
+width: 100%;
+height: 550px;   /* A touch shorter than 700px so it doesn't dominate */
 }
 
 /* ==========================================================================
