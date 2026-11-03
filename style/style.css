@@ -573,3 +573,58 @@ footer p {
     }
 }
 
+/* Styled Contributors List */
+.contributors-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+
+.contributors-list li {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #274e13; /* Brand green accent bar on the left */
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.contributors-list li:hover {
+    background-color: #f0f9f5;
+}
+
+.contributor-name {
+    font-weight: 700;
+    color: #274e13;
+}
+
+.contributor-role {
+    color: #555;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.contributor-loc {
+    color: #666;
+    font-size: 13px;
+}
+
+.contributor-loc i {
+    color: #274e13;
+    font-size: 11px;
+    margin-right: 2px;
+}
+
+.contributors-list a {
+    color: #274e13;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.contributors-list a:hover {
+    text-decoration: underline;
+}
