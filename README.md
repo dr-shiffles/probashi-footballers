@@ -27,7 +27,7 @@ To ensure accuracy and comprehensive coverage, our database is compiled from a v
 
 Special thanks to our core team and community contributors for their continued support with scouting players and maintaining the database:
 
-- **Shifat Taushif** (Founder & Maintainer) – 🇨🇦 CAN / 🇺🇸 USA – [@dr_shiffles](https://x.com/dr_shiffles)
+- **Shifat Taushif** (Founder & Maintainer) – 🇨🇦 CAN / 🇺🇸 USA – [@probashisoccer](https://x.com/probashisoccer)
 - **Bangladeshi Ballers** – 🇬🇧 GBR – [@banglaballers](https://x.com/banglaballers)
 - **BangladeshFooty** – 🇺🇸 USA – [@BangladeshFooty](https://x.com/BangladeshFooty)
 - **Swapno** – 🇧🇩 BGD – [@imswapnonil](https://x.com/imswapnonil)
