@@ -264,6 +264,49 @@ function parseMarketValue(val) {
     return parseFloat(cleanVal) || 0;
 }
 
+// Parse a socials URL string (may contain multiple URLs separated by ';')
+// and return an HTML string of icon links
+function renderSocialLinks(rawValue) {
+    if (!rawValue || rawValue === '-' || rawValue === '??' || rawValue.trim() === '') {
+        return '-';
+    }
+
+    const platformMap = [
+        { match: /instagram\.com/i,         icon: 'fa-instagram', label: 'Instagram', color: '#E1306C' },
+        { match: /(twitter|x)\.com/i,       icon: 'fa-x-twitter', label: 'X',         color: '#000000' },
+        { match: /facebook\.com/i,          icon: 'fa-facebook',  label: 'Facebook',  color: '#1877F2' },
+        { match: /tiktok\.com/i,            icon: 'fa-tiktok',    label: 'TikTok',    color: '#000000' },
+        { match: /linkedin\.com/i,          icon: 'fa-linkedin',  label: 'LinkedIn',  color: '#0A66C2' },
+        { match: /youtube\.com|youtu\.be/i, icon: 'fa-youtube',   label: 'YouTube',   color: '#FF0000' },
+        { match: /snapchat\.com/i,          icon: 'fa-snapchat',  label: 'Snapchat',  color: '#FFFC00' },
+        { match: /threads\.net/i,           icon: 'fa-threads',   label: 'Threads',   color: '#000000' },
+        { match: /twitch\.tv/i,             icon: 'fa-twitch',    label: 'Twitch',    color: '#9146FF' }
+    ];
+
+    const urls = rawValue.split(';').map(u => u.trim()).filter(Boolean);
+
+    const links = urls.map(url => {
+        let href = url;
+        if (!/^https?:\/\//i.test(href)) href = 'https://' + href;
+
+            const platform = platformMap.find(p => p.match.test(href));
+        const iconClass = platform ? platform.icon : 'fa-link';
+        const label = platform ? platform.label : 'Link';
+        const color = platform ? platform.color : '#274e13';
+
+        const safeHref = href.replace(/"/g, '&quot;');
+        const safeLabel = label.replace(/"/g, '&quot;');
+
+        return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer"
+        title="${safeLabel}" aria-label="${safeLabel}"
+        style="color:${color}; text-decoration:none; margin-right:6px; font-size:16px;">
+        <i class="fa-brands ${iconClass}"></i>
+        </a>`;
+    });
+
+    return links.join('') || '-';
+}
+
 // Main sorting function
 function sortData(columnIndex, type) {
     // Toggle direction if clicking the same column
@@ -457,14 +500,25 @@ function updateTable() {
     pageData.forEach(player => {
         const row = document.createElement('tr');
 
-        // Explicitly render only the first 18 columns (indices 0 to 17)
-        for (let i = 0; i < 18; i++) {
+        // Render columns 0..18 (index 19 = Sorting String, hidden)
+        // Index 17 = Socials (rendered as HTML links)
+        // Index 18 = Last Update
+        for (let i = 0; i < 19; i++) {
             const cell = document.createElement('td');
             let value = player[i] || '-';
             if (value === '??' || value === 'Unknown' || value === '') {
                 value = '-';
             }
-            cell.textContent = value;
+
+            if (i === 17) {
+                // Socials column: render as icon links
+                cell.innerHTML = renderSocialLinks(value);
+                cell.classList.add('social-cell');
+                cell.style.whiteSpace = 'nowrap';
+            } else {
+                cell.textContent = value;
+            }
+
             row.appendChild(cell);
         }
 
@@ -488,7 +542,7 @@ function updatePagination() {
     nextPageBtn.disabled = currentPage >= totalPages;
 
     if (filteredData.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="18" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="19" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
         rowCount.textContent = 'Showing 0 of 0 players';
     }
 }
@@ -525,7 +579,7 @@ function displayRecentUpdates() {
     const playersWithDates = playersData
     .map(player => ({
         data: player,
-        parsedDate: parseDateFromCSV(player[17]) // Last Update column
+        parsedDate: parseDateFromCSV(player[18]) // Last Update column
     }))
     .filter(item => item.parsedDate !== null);
 
@@ -550,7 +604,9 @@ function displayRecentUpdates() {
         const clubTier = p[10] || '-';
         const notes = p[11] || 'N/A';
         const marketValue = p[12] || '—';
-        const rawDate = p[17];
+        const socialsHtml = renderSocialLinks(p[17] || '-');
+        const rawDate = p[18];
+
 
 
         const li = document.createElement('li');
