@@ -28,7 +28,7 @@ body {
 }
 
 .container {
-    max-width: 95%;
+    max-width: 85%;
     margin: 0 auto;
     background-color: white;
     border-radius: 0 0 5px 5px;
@@ -627,4 +627,41 @@ footer p {
 
 .contributors-list a:hover {
     text-decoration: underline;
+}
+
+/* Market Value column */
+td:nth-child(13) {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    color: #274e13;
+    font-weight: 600;
+}
+
+th:nth-child(13) {
+    text-align: right;
+    white-space: nowrap;
+    color: white; /* <-- This keeps the header text visible! */
+}
+
+
+/* Clickable Table Headers */
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+th.sortable:hover {
+    background-color: #3a6b1a; /* Slightly lighter green on hover */
+}
+
+th.active-sort {
+    background-color: #1a3a0d; /* Darker green when active */
+}
+
+.sort-icon {
+    margin-left: 5px;
+    font-size: 12px;
+    transition: opacity 0.2s;
 }

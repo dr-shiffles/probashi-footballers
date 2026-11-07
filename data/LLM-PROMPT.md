@@ -69,7 +69,8 @@ The social media post is a summary.
 
 ### Target Schema for Database
 The CSV headers (first row) are:
-Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Club Country,Tier,Notes,NT,Tier,Caps,Gls.,Last Update,Sorting String
+Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Club Country,Tier,Notes,Market Value,NT,Tier,Caps,Gls.,Last Update,Sorting String
+
 
 1. **Positions:** 
    * Use 2/3 letter abbreviations (e.g., FW, MF, DF, CAM, CM, LW).
@@ -106,6 +107,11 @@ Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Na
 7. **Sorting String:**
    * Auto-generate using the formula: `Club Country,Last Name,Given Names(s),YYYY,Club Name`
    * Wrap the entire string in double quotes (e.g., `"BAN,Boka Striker,Ashraful,1971,Goal Dite Pare Na F.C."`) to ensure it is one string, and does not generate multiple columns. 
+   
+8. **Market Value:**
+   * Manually entered Transfermarkt market value in EUR, e.g. `€1.2m`, `€450k`, `€0`.
+   * If unknown or not listed, enter `—` (em dash).
+   * Leave blank only if the field is deliberately not yet reviewed.
 
 After you read through this, wait for further instructions for me to start giving you player information. 
 
