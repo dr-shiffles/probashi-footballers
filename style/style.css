@@ -665,3 +665,18 @@ th.active-sort {
     font-size: 12px;
     transition: opacity 0.2s;
 }
+
+/* Socials column */
+.social-cell {
+    text-align: center;
+}
+
+.social-cell a {
+    display: inline-block;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.social-cell a:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
