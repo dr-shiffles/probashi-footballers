@@ -8,6 +8,10 @@ let birthYearOptions = new Set();
 let countryOptions = new Set();
 let tierOptions = new Set();
 
+// Sorting state
+let currentSortColumn = null;
+let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
 // DOM Elements
 const tableBody = document.getElementById('tableBody');
 const nameFilter = document.getElementById('nameFilter');
@@ -251,6 +255,118 @@ function getNTCategory(ntValue) {
     return 'others';
 }
 
+// Helper to extract numeric value from Market Value strings (e.g., "€1.2m")
+function parseMarketValue(val) {
+    if (!val || val === '-' || val === '—' || val === '€0') return 0;
+    const cleanVal = val.replace(/[€,\s]/g, '').toLowerCase();
+    if (cleanVal.endsWith('m')) return parseFloat(cleanVal) * 1000000;
+    if (cleanVal.endsWith('k')) return parseFloat(cleanVal) * 1000;
+    return parseFloat(cleanVal) || 0;
+}
+
+// Parse a socials URL string (may contain multiple URLs separated by ';')
+// and return an HTML string of icon links
+function renderSocialLinks(rawValue) {
+    if (!rawValue || rawValue === '-' || rawValue === '??' || rawValue.trim() === '') {
+        return '-';
+    }
+
+    const platformMap = [
+        { match: /instagram\.com/i,         icon: 'fa-instagram', label: 'Instagram', color: '#E1306C' },
+        { match: /(twitter|x)\.com/i,       icon: 'fa-x-twitter', label: 'X',         color: '#000000' },
+        { match: /facebook\.com/i,          icon: 'fa-facebook',  label: 'Facebook',  color: '#1877F2' },
+        { match: /tiktok\.com/i,            icon: 'fa-tiktok',    label: 'TikTok',    color: '#000000' },
+        { match: /linkedin\.com/i,          icon: 'fa-linkedin',  label: 'LinkedIn',  color: '#0A66C2' },
+        { match: /youtube\.com|youtu\.be/i, icon: 'fa-youtube',   label: 'YouTube',   color: '#FF0000' },
+        { match: /snapchat\.com/i,          icon: 'fa-snapchat',  label: 'Snapchat',  color: '#FFFC00' },
+        { match: /threads\.net/i,           icon: 'fa-threads',   label: 'Threads',   color: '#000000' },
+        { match: /twitch\.tv/i,             icon: 'fa-twitch',    label: 'Twitch',    color: '#9146FF' }
+    ];
+
+    const urls = rawValue.split(';').map(u => u.trim()).filter(Boolean);
+
+    const links = urls.map(url => {
+        let href = url;
+        if (!/^https?:\/\//i.test(href)) href = 'https://' + href;
+
+            const platform = platformMap.find(p => p.match.test(href));
+        const iconClass = platform ? platform.icon : 'fa-link';
+        const label = platform ? platform.label : 'Link';
+        const color = platform ? platform.color : '#274e13';
+
+        const safeHref = href.replace(/"/g, '&quot;');
+        const safeLabel = label.replace(/"/g, '&quot;');
+
+        return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer"
+        title="${safeLabel}" aria-label="${safeLabel}"
+        style="color:${color}; text-decoration:none; margin-right:6px; font-size:16px;">
+        <i class="fa-brands ${iconClass}"></i>
+        </a>`;
+    });
+
+    return links.join('') || '-';
+}
+
+// Main sorting function
+function sortData(columnIndex, type) {
+    // Toggle direction if clicking the same column
+    if (currentSortColumn === columnIndex) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortColumn = columnIndex;
+        currentSortDirection = 'asc';
+    }
+
+    filteredData.sort((a, b) => {
+        let valA = a[columnIndex] || '';
+        let valB = b[columnIndex] || '';
+
+        // Handle specific data types
+        if (type === 'number') {
+            valA = parseFloat(valA) || 0;
+            valB = parseFloat(valB) || 0;
+        } else if (type === 'value') {
+            valA = parseMarketValue(valA);
+            valB = parseMarketValue(valB);
+        } else if (type === 'date') {
+            valA = new Date(valA).getTime() || 0;
+            valB = new Date(valB).getTime() || 0;
+        } else {
+            // String sorting
+            valA = valA.toString().toLowerCase();
+            valB = valB.toString().toLowerCase();
+        }
+
+        if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    currentPage = 1; // Reset to page 1
+    updateTable();
+    updateSortIcons(columnIndex, currentSortDirection);
+}
+
+// Update the visual arrows in the table headers
+function updateSortIcons(activeCol, direction) {
+    document.querySelectorAll('th.sortable').forEach((th) => {
+        const icon = th.querySelector('.sort-icon');
+        const colIndex = parseInt(th.getAttribute('data-col'));
+
+        if (icon) {
+            if (colIndex === activeCol) {
+                icon.className = direction === 'asc' ? 'fas fa-sort-up sort-icon' : 'fas fa-sort-down sort-icon';
+                icon.style.opacity = '1';
+                th.classList.add('active-sort');
+            } else {
+                icon.className = 'fas fa-sort sort-icon';
+                icon.style.opacity = '0.3';
+                th.classList.remove('active-sort');
+            }
+        }
+    });
+}
+
 // Apply filters to the data
 function applyFilters() {
     const nameFilterValue = nameFilter.value.toLowerCase();
@@ -295,7 +411,7 @@ function applyFilters() {
 
         // NT filter
         if (ntFilterValue && ntFilterValue !== 'all') {
-            const ntValue = player[12];
+            const ntValue = player[13];
             const ntCategory = getNTCategory(ntValue);
             if (ntCategory !== ntFilterValue) {
                 return false;
@@ -315,12 +431,8 @@ function setupEventListeners() {
     positionFilter.addEventListener('change', applyFilters);
     birthYearFilter.addEventListener('change', applyFilters);
     countryFilter.addEventListener('change', applyFilters);
-    if (tierFilter) {
-        tierFilter.addEventListener('change', applyFilters);
-    }
-    if (ntFilter) {
-        ntFilter.addEventListener('change', applyFilters);
-    }
+    if (tierFilter) tierFilter.addEventListener('change', applyFilters);
+    if (ntFilter) ntFilter.addEventListener('change', applyFilters);
 
     resetFiltersBtn.addEventListener('click', () => {
         nameFilter.value = '';
@@ -329,6 +441,24 @@ function setupEventListeners() {
         countryFilter.value = '';
         if (tierFilter) tierFilter.value = 'all';
         if (ntFilter) ntFilter.value = 'all';
+
+        // Reset sorting state
+        currentSortColumn = null;
+        currentSortDirection = 'asc';
+
+        // Reset header icons
+        updateSortIcons(-1, 'asc');
+
+        // Re-apply default CSV sorting
+        playersData.sort((a, b) => {
+            const sortA = a[a.length - 1] || '';
+            const sortB = b[b.length - 1] || '';
+            const isUnattachedA = sortA.startsWith('~~~');
+            const isUnattachedB = sortB.startsWith('~~~');
+            if (isUnattachedA === isUnattachedB) return sortA.localeCompare(sortB);
+            return isUnattachedA ? 1 : -1;
+        });
+
         applyFilters();
     });
 
@@ -346,6 +476,17 @@ function setupEventListeners() {
             updateTable();
         }
     });
+
+    // --- HEADER CLICK LOGIC ---
+    document.querySelectorAll('th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            const colIndex = parseInt(th.getAttribute('data-col'));
+            const type = th.getAttribute('data-type');
+
+            // Call the main sorting function
+            sortData(colIndex, type);
+        });
+    });
 }
 
 // Update the table
@@ -358,15 +499,29 @@ function updateTable() {
 
     pageData.forEach(player => {
         const row = document.createElement('tr');
-        for (let i = 0; i < player.length - 1; i++) {
+
+        // Render columns 0..18 (index 19 = Sorting String, hidden)
+        // Index 17 = Socials (rendered as HTML links)
+        // Index 18 = Last Update
+        for (let i = 0; i < 19; i++) {
             const cell = document.createElement('td');
             let value = player[i] || '-';
             if (value === '??' || value === 'Unknown' || value === '') {
                 value = '-';
             }
-            cell.textContent = value;
+
+            if (i === 17) {
+                // Socials column: render as icon links
+                cell.innerHTML = renderSocialLinks(value);
+                cell.classList.add('social-cell');
+                cell.style.whiteSpace = 'nowrap';
+            } else {
+                cell.textContent = value;
+            }
+
             row.appendChild(cell);
         }
+
         tableBody.appendChild(row);
     });
 
@@ -387,7 +542,7 @@ function updatePagination() {
     nextPageBtn.disabled = currentPage >= totalPages;
 
     if (filteredData.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="17" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="19" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
         rowCount.textContent = 'Showing 0 of 0 players';
     }
 }
@@ -424,7 +579,7 @@ function displayRecentUpdates() {
     const playersWithDates = playersData
     .map(player => ({
         data: player,
-        parsedDate: parseDateFromCSV(player[16]) // Last Update column
+        parsedDate: parseDateFromCSV(player[18]) // Last Update column
     }))
     .filter(item => item.parsedDate !== null);
 
@@ -446,14 +601,18 @@ function displayRecentUpdates() {
         const position = p[2] || '-';
         const club = p[8] || 'Unattached';
         const country = p[9] || '-';
-        const rawDate = p[16];
         const clubTier = p[10] || '-';
         const notes = p[11] || 'N/A';
+        const marketValue = p[12] || '—';
+        const socialsHtml = renderSocialLinks(p[17] || '-');
+        const rawDate = p[18];
+
+
 
         const li = document.createElement('li');
         li.innerHTML = `
         <strong>${firstName} ${lastName}</strong>
-        <span class="update-details">${position} | Current Club: ${club} (${country}-${clubTier}) | Notes: ${notes}</span>
+        <span class="update-details">${position} | Current Club: ${club} (${country}-${clubTier}) | Market Value: ${marketValue} | Notes: ${notes}</span>
         <span class="update-tag">Updated: ${rawDate}</span>
         `;
         recentContainer.appendChild(li);
