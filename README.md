@@ -32,7 +32,7 @@ Special thanks to our core team and community contributors for their continued s
 - **BangladeshFooty** – 🇺🇸 USA – [@BangladeshFooty](https://x.com/BangladeshFooty)
 - **Swapno** – 🇧🇩 BGD – [@imswapnonil](https://x.com/imswapnonil)
 - **OriginFoot** – 🇧🇩 BGD – [@OriginFoot_bd](https://x.com/OriginFoot_bd)
-- **Tanveer** – 🇺🇸 USA – [@TofazzalTanveer](https://x.com/TofazzalTanveer)
+- **Tanveer** – 🇧🇩 BGD – [@TofazzalTanveer](https://x.com/TofazzalTanveer)
 
 ---
 

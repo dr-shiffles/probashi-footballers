@@ -66,6 +66,13 @@ The markdown changelog is the canonical version.
 
 The social media post is a summary.
 
+The tweet should always start with:
+
+"Database Update [The date the update is being made on, YYYY-MM-DD format]"
+1 Sentence explaining what type of update is being made, i.e. "X new players added, Y player updates!"
+
+End the tweet with: "Che"
+
 
 ### Target Schema for Database
 The CSV headers (first row) are:
