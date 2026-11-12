@@ -64,16 +64,22 @@ async function loadCSVData(csvFilename = 'data/mens.csv') {
     displayRecentUpdates();
 }
 
-// NEW: Load last update info from JSON
 async function loadLastUpdateInfo() {
     try {
         const response = await fetch('data/lastUpdate.json');
         if (response.ok) {
             const data = await response.json();
 
-            // Update the last update date
-            if (data.lastUpdate) {
-                const date = new Date(data.lastUpdate);
+            // Pick the per-database timestamp for THIS page
+            const isWomenPage = document.body.dataset.gender === 'women';
+            const pageTimestamp =
+            isWomenPage
+            ? (data.womenLastUpdate || data.lastUpdate)
+            : (data.menLastUpdate   || data.lastUpdate);
+
+            // Use the SAME per-page timestamp for the visible label
+            if (pageTimestamp) {
+                const date = new Date(pageTimestamp);
                 const formattedDate = date.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -83,19 +89,25 @@ async function loadLastUpdateInfo() {
                     timeZoneName: 'short'
                 });
                 lastUpdate.textContent = formattedDate;
+            } else {
+                lastUpdate.textContent = 'Unknown';
             }
 
-            // Also store in a global for use elsewhere if needed
-            window.lastUpdateData = data;
+            // Store globals
+            window.lastUpdateData   = data;
+            window.recentUpdateDate = pageTimestamp || null;
 
             console.log('Last update info loaded:', data);
+            console.log('Per-page update date:', pageTimestamp);
         } else {
             console.warn('lastUpdate.json not found, using fallback');
             lastUpdate.textContent = 'Unknown (JSON file not found)';
+            window.recentUpdateDate = null;
         }
     } catch (error) {
         console.error('Error loading lastUpdate.json:', error);
         lastUpdate.textContent = 'Unknown (Error loading)';
+        window.recentUpdateDate = null;
     }
 }
 
@@ -567,34 +579,79 @@ function parseDateFromCSV(dateStr) {
     const fallbackDate = new Date(dateStr);
     return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
 }
-
-// Display recent updates
+// Display recent updates — shows ALL players updated on (or closest to) the
+// last DB update date for THIS page's dataset (men vs women).
 function displayRecentUpdates() {
     const recentContainer = document.getElementById('recentUpdatesList');
     if (!recentContainer) return;
 
     recentContainer.innerHTML = '';
 
-    // Filter players with valid update dates
+    // Use the per-page update date set by loadLastUpdateInfo()
+    let lastUpdateDate = null;
+    if (window.recentUpdateDate) {
+        const parsed = new Date(window.recentUpdateDate);
+        if (!isNaN(parsed.getTime())) {
+            lastUpdateDate = parsed;
+        }
+    }
+
+    // Map players to their parsed update dates (from column 18)
     const playersWithDates = playersData
     .map(player => ({
         data: player,
-        parsedDate: parseDateFromCSV(player[18]) // Last Update column
+        parsedDate: parseDateFromCSV(player[18])
     }))
     .filter(item => item.parsedDate !== null);
 
-    // Sort by date descending (newest first)
-    playersWithDates.sort((a, b) => b.parsedDate - a.parsedDate);
-
-    // Take top 5
-    const topRecent = playersWithDates.slice(0, 5);
-
-    if (topRecent.length === 0) {
+    if (playersWithDates.length === 0) {
         recentContainer.innerHTML = '<li>No recent update history found.</li>';
         return;
     }
 
-    topRecent.forEach(item => {
+    // Helper: normalize a Date to local midnight (day-level comparison)
+    const toDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+
+    let recentPlayers = [];
+
+    if (lastUpdateDate) {
+        const targetDay = toDay(lastUpdateDate);
+
+        // 1) Exact same-day match against the per-page update date
+        recentPlayers = playersWithDates.filter(
+            item => toDay(item.parsedDate) === targetDay
+        );
+
+        // 2) Fallback: closest date on or before that timestamp
+        if (recentPlayers.length === 0) {
+            const candidates = playersWithDates.filter(
+                item => item.parsedDate.getTime() <= lastUpdateDate.getTime()
+            );
+            const pool = candidates.length > 0 ? candidates : playersWithDates;
+            const maxDay = Math.max(...pool.map(i => toDay(i.parsedDate)));
+            recentPlayers = pool.filter(item => toDay(item.parsedDate) === maxDay);
+        }
+    } else {
+        // No per-page update date available → most recent single day in this CSV
+        const maxDay = Math.max(...playersWithDates.map(i => toDay(i.parsedDate)));
+        recentPlayers = playersWithDates.filter(item => toDay(item.parsedDate) === maxDay);
+    }
+
+    // Sort within the day: newest first, then alphabetical by name for stability
+    recentPlayers.sort((a, b) => {
+        const diff = b.parsedDate - a.parsedDate;
+        if (diff !== 0) return diff;
+        const nameA = `${a.data[0] || ''} ${a.data[1] || ''}`.toLowerCase();
+        const nameB = `${b.data[0] || ''} ${b.data[1] || ''}`.toLowerCase();
+        return nameA.localeCompare(nameB);
+    });
+
+    if (recentPlayers.length === 0) {
+        recentContainer.innerHTML = '<li>No recent update history found.</li>';
+        return;
+    }
+
+    recentPlayers.forEach(item => {
         const p = item.data;
         const firstName = p[0] || '';
         const lastName = p[1] || '';
@@ -604,10 +661,7 @@ function displayRecentUpdates() {
         const clubTier = p[10] || '-';
         const notes = p[11] || 'N/A';
         const marketValue = p[12] || '—';
-        const socialsHtml = renderSocialLinks(p[17] || '-');
         const rawDate = p[18];
-
-
 
         const li = document.createElement('li');
         li.innerHTML = `

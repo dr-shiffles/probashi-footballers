@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body data-gender="women">
     <!-- Navigation Menu -->
     <nav class="navbar">
         <div class="nav-container">
@@ -178,8 +178,7 @@
         <!--- Latest updates -->
 
         <div class="last-update">
-
-            
+            <p>Women's Database Last Updated on: <span id="lastUpdate"></span> </p>
             <p style="font-weight: bold; margin-top: 15px; margin-bottom: 8px; color: #274e13;">
                  Most Recently Added/Updated Players:
             </p>
@@ -187,7 +186,6 @@
         </div>
 
         <footer>
-            <p>Database Revision: <span id="lastUpdate"></span></p>
             <p>
                 © 2025-2026 Probashi-Footballers.com<br />
                 Made with ♥ in Canada & USA<br />
@@ -197,7 +195,7 @@
     </div>
 
     <script src="scripts/script.js"></script>
-<script>
+    <script>
         // Load data
         document.addEventListener('DOMContentLoaded', async () => {
             await loadCSVData('data/women.csv');

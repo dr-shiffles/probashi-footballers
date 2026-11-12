@@ -63,6 +63,30 @@ async function loadAllData() {
             console.warn('Error loading women\'s data:', error);
         }
 
+        // --- NEW: Load Last Update Date from JSON ---
+        try {
+            const updateResponse = await fetch('data/lastUpdate.json');
+            if (updateResponse.ok) {
+                const updateData = await updateResponse.json();
+                const dateEl = document.getElementById('statsUpdated');
+                if (dateEl && updateData.lastUpdate) {
+                    // Parse the date string from JSON
+                    const date = new Date(updateData.lastUpdate);
+                    if (!isNaN(date)) {
+                        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        dateEl.textContent = date.toLocaleDateString('en-US', options);
+                    } else {
+                        dateEl.textContent = updateData.lastUpdate; // Fallback to raw string
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('Error loading last update date:', error);
+            const dateEl = document.getElementById('statsUpdated');
+            if (dateEl) dateEl.textContent = 'Unknown';
+        }
+        // -------------------------------------------
+
         // Hide loading state
         document.getElementById('loadingMessage').style.display = 'none';
 
@@ -262,7 +286,7 @@ function displayStats() {
         renderTopCountriesTable('menTopCountriesBody', menStats.countryCounts);
         renderTopCountriesTable('womenTopCountriesBody', womenStats.countryCounts);
 
-        updateLastUpdateDate();
+        renderAllLeaderboards();
 }
 
 // Helper: Generates and injects text-only rows for the Top 5 Countries tables
@@ -300,55 +324,6 @@ function renderTopCountriesTable(targetElementId, countryCounts) {
     });
 }
 
-// Update last updated timestamp from actual data
-function updateLastUpdateDate() {
-    // Combine men and women data
-    const allData = [...menData, ...womenData];
-    let latestDate = null;
-
-    allData.forEach(player => {
-        const updateDate = player[16]; // Last Update column
-        if (updateDate && updateDate !== "Status Unknown" && updateDate !== "-") {
-            const dateStr = updateDate.trim();
-
-            // Try different date formats
-            if (dateStr.includes('/')) {
-                // Format: MM/DD/YYYY or MM/DD/YY
-                const dateParts = dateStr.split('/');
-                if (dateParts.length === 3) {
-                    let year = dateParts[2];
-                    if (year.length === 2) {
-                        year = '20' + year;
-                    }
-                    const date = new Date(year, dateParts[0] - 1, dateParts[1]);
-                    if (!isNaN(date) && (!latestDate || date > latestDate)) {
-                        latestDate = date;
-                    }
-                }
-            } else if (dateStr.includes('-')) {
-                // Format: YYYY-MM-DD
-                const dateParts = dateStr.split('-');
-                if (dateParts.length === 3) {
-                    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-                    if (!isNaN(date) && (!latestDate || date > latestDate)) {
-                        latestDate = date;
-                    }
-                }
-            }
-        }
-    });
-
-    if (latestDate) {
-        const options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        };
-        document.getElementById('statsUpdated').textContent = latestDate.toLocaleDateString('en-US', options);
-    } else {
-        document.getElementById('statsUpdated').textContent = 'Unknown';
-    }
-}
 
 // Setup mobile menu (copied from main script)
 function setupMobileMenu() {
@@ -366,4 +341,134 @@ function setupMobileMenu() {
             navMenu.classList.remove('active');
         });
     });
+}
+
+
+// ==========================================================================
+// LEADERBOARD: Top Appearances & Top Scorers (Bangladesh NT only)
+// ==========================================================================
+
+const COL_NAME         = 0;    // Given Names(s)
+const COL_APPEARANCES  = 15;   // Caps
+const COL_GOALS        = 16;   // Gls.
+
+function parseNumberCell(value) {
+    if (!value) return 0;
+    const cleaned = String(value).replace(/[^0-9.\-]/g, '');
+    const num = parseFloat(cleaned);
+    return isNaN(num) ? 0 : num;
+}
+
+function getPlayerName(player) {
+    const firstName = (player[0] || '').trim();
+    const lastName  = (player[1] || '').trim();
+
+    // Combine them, handling cases where one might be missing
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return fullName || 'Unknown Player';
+}
+
+function isBangladeshNTCappedPlayer(player) {
+    const nt = (getPlayerNT(player) || '').trim().toUpperCase();
+    if (nt !== 'BAN') return false;
+
+    const caps  = parseNumberCell(player[COL_APPEARANCES]);
+    const goals = parseNumberCell(player[COL_GOALS]);
+    return caps > 0 || goals > 0;
+}
+
+function buildLeaderboard(data, sortBy, limit = 10) {
+    return data
+    .filter(isBangladeshNTCappedPlayer)
+    .map(player => ({
+        name: getPlayerName(player),
+                    club: (player[8] || '').trim(),          // Club Name
+                    clubCountry: (player[9] || '').trim(),   // Country
+                    clubTier: (player[10] || '').trim(),     // Tier
+                    appearances: parseNumberCell(player[COL_APPEARANCES]),
+                    goals: parseNumberCell(player[COL_GOALS])
+    }))
+    .sort((a, b) => {
+        if (sortBy === 'goals') {
+            return b.goals - a.goals || b.appearances - a.appearances;
+        }
+        return b.appearances - a.appearances || b.goals - a.goals;
+    })
+    .slice(0, limit);
+}
+
+function renderLeaderboard(tbodyId, data, sortBy, limit = 10) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+
+    const board = buildLeaderboard(data, sortBy, limit);
+    tbody.innerHTML = '';
+
+    if (board.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:15px;color:#777;">No Bangladesh NT data available</td></tr>`;
+        return;
+    }
+
+    board.forEach((player, index) => {
+        const rank = index + 1;
+
+        // Format the club string: (Club Name [Country-Tier])
+        let clubInfo = '—';
+        if (player.club && player.club !== '-' && player.club.toLowerCase() !== 'unattached') {
+            let countryTier = '';
+            if (player.clubCountry && player.clubCountry !== '-') {
+                countryTier = player.clubCountry;
+                if (player.clubTier && player.clubTier !== '-') {
+                    countryTier += `-${player.clubTier}`;
+                }
+                countryTier = ` (${countryTier})`;
+            }
+            clubInfo = `${player.club}${countryTier}`;
+        } else if (player.club && player.club.toLowerCase() === 'unattached') {
+            clubInfo = 'Unattached';
+        }
+
+        const appClass  = sortBy === 'appearances' ? 'leaderboard-highlight' : '';
+        const goalClass = sortBy === 'goals'         ? 'leaderboard-highlight' : '';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td class="leaderboard-rank">#${rank}</td>
+        <td class="leaderboard-player">
+        ${player.name}
+        <small>${clubInfo}</small>
+        </td>
+        <td class="number-cell ${appClass}">${player.appearances.toLocaleString()}</td>
+        <td class="number-cell ${goalClass}">${player.goals.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function setupLeaderboardTabs(tabsContainerId, tbodyId, data) {
+    const container = document.getElementById(tabsContainerId);
+    if (!container) return;
+
+    if (container.dataset.bound === 'true') return;
+    container.dataset.bound = 'true';
+
+    const buttons = container.querySelectorAll('.leaderboard-tab');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const sortBy = btn.dataset.tab;
+            renderLeaderboard(tbodyId, data, sortBy);
+        });
+    });
+}
+
+function renderAllLeaderboards() {
+    renderLeaderboard('menLeaderboardBody', menData, 'appearances');
+    setupLeaderboardTabs('menLeaderboardTabs', 'menLeaderboardBody', menData);
+
+    renderLeaderboard('womenLeaderboardBody', womenData, 'appearances');
+    setupLeaderboardTabs('womenLeaderboardTabs', 'womenLeaderboardBody', womenData);
 }
