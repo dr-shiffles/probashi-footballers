@@ -113,7 +113,7 @@ function getPlayerCountry(player) {
 
 // Extract NT from player data (column index 12)
 function getPlayerNT(player) {
-    return player[12] || '';
+    return player[13] || '';
 }
 
 // Extract position from player data (column index 2) - HANDLES MULTIPLE POSITIONS
