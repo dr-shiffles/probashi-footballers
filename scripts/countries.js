@@ -19,6 +19,7 @@ const countryCodeMap = {
     'HKG': 'Hong Kong',
     'IRL': 'Ireland',
     'ITA': 'Italy',
+    'IND': 'India',
     'JPN': 'Japan',
     'LAO': 'Laos',
     'MAS': 'Malaysia',
