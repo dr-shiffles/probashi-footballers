@@ -387,3 +387,116 @@ height: 550px;   /* A touch shorter than 700px so it doesn't dominate */
         white-space: normal;
     }
 }
+/* ==========================================================================
+ *  Leaderboard Section (Top Appearances / Top Scorers)
+ *  ========================================================================== */
+
+/* Two-column row layout matching the 1200px max width */
+.two-col-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+}
+
+.grid-col-half {
+    flex: 1 1 0px;
+    min-width: 280px;
+    max-width: 585px;   /* (1200 - 20 gap) / 2 = 590, rounded down */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Tabs for switching between Appearances / Goals */
+.leaderboard-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+    justify-content: flex-start;
+}
+
+.leaderboard-tab {
+    padding: 6px 16px;
+    border: 1px solid #b7cdb4;
+    background: #f0f9f5;
+    color: #274e13;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.leaderboard-tab:hover {
+    background: #dcefdc;
+}
+
+.leaderboard-tab.active {
+    background: #3a6b1a;
+    color: #fff;
+    border-color: #3a6b1a;
+}
+
+/* Rank column in leaderboard tables */
+.leaderboard-rank {
+    text-align: center;
+    font-weight: bold;
+    color: #115c32;
+    width: 40px;
+}
+
+/* Player name styling */
+.leaderboard-player {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+/* Small secondary line under player name (country) */
+.leaderboard-player small {
+    display: block;
+    font-weight: 400;
+    color: #888;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+/* Highlight the active sort column */
+.leaderboard-highlight {
+    background: #eaf4ea;
+    font-weight: bold;
+}
+
+/* Responsive: stack the two leaderboard columns on narrower screens */
+@media (max-width: 950px) {
+    .two-col-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .grid-col-half {
+        width: 100%;
+        max-width: 550px;
+    }
+}
+
+@media (max-width: 768px) {
+    .leaderboard-tab {
+        padding: 5px 10px;
+        font-size: 0.78rem;
+    }
+
+    .leaderboard-player {
+        max-width: 140px;
+    }
+}
