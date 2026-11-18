@@ -71,13 +71,42 @@ The tweet should always start with:
 "Database Update [The date the update is being made on, YYYY-MM-DD format]"
 1 Sentence explaining what type of update is being made, i.e. "X new players added, Y player updates!"
 
-End the tweet with: "Che"
-
-
 ### Target Schema for Database
-The CSV headers (first row) are:
-Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Club Country,Tier,Notes,Market Value,NT,Tier,Caps,Gls.,Last Update,Sorting String
+The CSV header (first row) is exactly 20 columns:
+Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Name,Country,Tier,Notes,Market Value ,NT,Tier,Caps,Gls.,Socials,Last Update,Sorting String
 
+Column notes:
+1. Given Names(s) — may contain spaces; quote if comma present.
+2. Last Name
+3. Positions — 2/3-letter codes; multiple values comma-separated and quoted, e.g. "RW, CF".
+4. YYYY — 4-digit year, always quoted as text, e.g. "2007". Use ?? if unknown.
+5. MM/DD — 2-digit month/day, always quoted, e.g. "02/24". Use ?? if unknown.
+6. Age — integer; blank if unknown.
+7. Birthplace — quote if it contains a comma, e.g. "Dhaka, Bangladesh".
+8. Citizenship — comma-separated country codes; quote, e.g. "HON, USA". Use - if unknown.
+9. Club Name — quote if it contains a comma or double-quote; escape " as "".
+10. Country — 3-letter club-country code (e.g. ENG, BAN, USA). Use ~~~ when unattached.
+11. Tier (CLUB tier) — league tier of the club. Values seen: 1–13, YA, AM, CL, FS, F1, -, ~~~.
+12. Notes — free text; ALWAYS quote (frequently contains commas/quotes).
+13. Market Value — format €<number><k|m>, or blank.
+14. NT — national team represented (e.g. BAN, AUS, MNP); use - if none.
+15. Tier (NT tier) — Senior, U23, U20, U19, U18, U17, U16, U15, U23/U20, Futsal; use - if none.
+16. Caps — integer or -.
+17. Gls. — integer or -.
+18. Socials — a single URL (Instagram/Facebook) or blank.
+19. Last Update — YYYY-MM-DD, or the literal string Status Unknown.
+20. Sorting String — constructed as:
+    Country,Last Name,Given Names,YYYY,Club Name
+    (quote the whole field; unattached players use "~~~" in place of Country).
+
+Rules:
+- Quote any field containing a comma, double-quote, or newline.
+- Escape embedded double-quotes by doubling them ("" inside a quoted field).
+- Unknown/absent values: use the same convention as the existing file for that column
+  (?? for unknown date parts, - for unknown enum fields, ~~~ for unattached club country).
+- Output must be exactly 20 fields per row. Verify count before emitting.
+- Emit the CSV inside a single fenced code block and nothing else.
+  
 
 1. **Positions:** 
    * Use 2/3 letter abbreviations (e.g., FW, MF, DF, CAM, CM, LW).
@@ -123,3 +152,20 @@ Given Names(s),Last Name,Positions,YYYY,MM/DD,Age,Birthplace,Citizenship,Club Na
 After you read through this, wait for further instructions for me to start giving you player information. 
 
 Once you are given the player information. Generate the CSV line, and the change log
+
+## Null / Blank Value Convention
+
+Use a single hyphen `-` (U+002D) for ALL blank, unknown, or not-applicable cells.
+Never emit an empty field, `??`, `~~~`, `—`, `N/A`, or whitespace-only cells.
+
+This applies to every column except where a more specific rule below overrides it:
+
+- `YYYY` and `MM/DD`: use `-` when unknown (do NOT use `??`).
+- `Age`, `Caps`, `Gls.`: use `-` when unknown.
+- `Birthplace`, `Citizenship`, `Notes`, `Socials`, `Market Value`: use `-` when empty.
+- `Country`, `Club Tier`, `NT`, `NT Tier`: use `-` when not applicable.
+- `Sorting String`: always fully populated; never `-` on its own.
+
+Rationale: a single sentinel makes row validation trivial (`awk -F, 'NF!=20'`)
+and prevents the trailing-comma corruption seen in the current `mens.csv`,
+where empty cells were emitted as bare `,,` and pushed rows to 21–23 fields.
