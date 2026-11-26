@@ -7,59 +7,11 @@
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <link rel="stylesheet" href="style/stats-style.css">
     <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation Menu -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <img src="img/logo_512x512.png" alt="Logo" style="width:48px;height:48px">
-                Probashi Footballers
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">
-                       Men
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="women.html" class="nav-link">
-                        Women
-                    </a>
-                </li>
-                <li class="nav-item active">
-                    <a href="stats.html" class="nav-link">
-                        Statistics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="guide.html" class="nav-link">
-                        Guide
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="about.html" class="nav-link">
-                        About
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="contact.html" class="nav-link">
-                        Contact
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://www.buymeacoffee.com/probashifol" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height: 32px !important;" ></a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <script src="scripts/layout.js"></script>
 
     <div class="container stats-container">
         <header>
@@ -310,39 +262,15 @@
             </table>
         </div>
 
-        <footer>
-            <p>
-                © 2025-2026 Probashi-Footballers.com<br />
-                Made with ♥ in Canada & USA<br />
-                For the best experience, please open the website on a large screen.
-            </p>
-        </footer>
+        <footer></footer>
     </div>
 
     <!-- Load scripts in order -->
     <script src="scripts/countries.js"></script>
+    <script src="scripts/common.js"></script>
     <script src="scripts/stats.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script src="scripts/heatmap.js"></script>
 
-    <script>
-        // Mobile menu toggle
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.querySelector('.hamburger');
-            const navMenu = document.querySelector('.nav-menu');
-
-            if (hamburger && navMenu) {
-                hamburger.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                });
-
-                document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-link').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                    });
-                });
-            }
-        });
-    </script>
 </body>
 </html>

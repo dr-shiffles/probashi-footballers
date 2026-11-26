@@ -40,10 +40,6 @@
     gap: 10px;
 }
 
-.stat-card h3 i {
-    font-size: 11px;
-}
-
 .stat-number {
     font-size: 18px;
     font-weight: bold;
@@ -228,11 +224,6 @@
     font-weight: bold;
 }
 
-.category-name i {
-    margin-right: 6px;
-    font-size: 12px;
-}
-
 .number-cell {
     text-align: center;
     font-weight: bold;
@@ -259,10 +250,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.section-title i {
-    font-size: 18px;
 }
 
 /* ==========================================================================
