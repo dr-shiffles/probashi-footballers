@@ -267,6 +267,15 @@ tbody tr:hover {
     gap: 8px;
 }
 
+.nav-logo {
+    width: 48px;
+    height: 48px;
+}
+
+.bmc-button {
+    height: 32px;
+}
+
 .nav-menu {
     display: flex;
     list-style: none;

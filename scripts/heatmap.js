@@ -1,56 +1,38 @@
 /*
  * heatmap.js — geographic distribution heatmap
- * Consumes menData / womenData globals populated by stats.js.
- * Listens for the "stats-data-ready" event so it always runs
- * after the CSVs have been parsed exactly once.
+ * Requires countries.js and common.js. Uses the menData / womenData globals
+ * populated by stats.js, and waits for its "stats-data-ready" event so it
+ * always runs after the CSVs have been parsed exactly once.
  */
 
-const countryNames = {
-    BGD: "Bangladesh", GBR: "United Kingdom", USA: "United States",
-    CAN: "Canada", AUS: "Australia", ITA: "Italy", SWE: "Sweden",
-    DEU: "Germany", FRA: "France", ESP: "Spain", NLD: "Netherlands",
-    NOR: "Norway", FIN: "Finland", DNK: "Denmark", IRL: "Ireland",
-    BEL: "Belgium", CHE: "Switzerland", AUT: "Austria", PRT: "Portugal",
-    JPN: "Japan", QAT: "Qatar", ARE: "United Arab Emirates",
-    NZL: "New Zealand", SGP: "Singapore", MYS: "Malaysia",
-    THA: "Thailand", HKG: "Hong Kong", CRO: "Croatia", SVK: "Slovakia",
-    ROM: "Romania", EST: "Estonia", GIB: "Gibraltar", FIJ: "Fiji",
-    BHU: "Bhutan", MYA: "Myanmar", TRI: "Trinidad and Tobago"
+const PLOTLY_CONFIG = {
+    responsive: true,
+    displayModeBar: false,
+    scrollZoom: false
 };
-
-/* FIFA / non-ISO codes -> ISO-3 for Plotly */
-const plotlyCountryMap = {
-    BAN: "BGD",
-    ENG: "GBR", SCO: "GBR", WAL: "GBR", NIR: "GBR",
-    GER: "DEU", NED: "NLD", POR: "PRT", SUI: "CHE",
-    MAS: "MYS", UAE: "ARE", TRI: "TTO"
-};
-
-const UK_CODES = ["ENG", "SCO", "WAL", "NIR"];
 
 /* ---------- counting ---------- */
 
 /*
- * Count players per ISO-3 country using ONLY column 9 ("Country" —
- * club-country, not nationality). Matches stats.js's getPlayerCountry.
+ * Count players per ISO-3 country using ONLY the club Country column
+ * (not nationality). England, Scotland, Wales and Northern Ireland are
+ * added together as the United Kingdom, and also counted separately
+ * for the hover breakdown.
  */
 function countPlayers(rows) {
     const counts   = {};
-    const ukCounts = { ENG: 0, SCO: 0, WAL: 0, NIR: 0 };
+    const ukCounts = {};
+    UK_HOME_NATIONS.forEach(([code]) => { ukCounts[code] = 0; });
 
     rows.forEach(player => {
-        let raw = (player[9] || "").trim();
-        if (!raw || raw === "-" || raw === "~~~") return;
+        const raw = player[COL.COUNTRY];
+        if (isBlankCode(raw)) return;
 
-        raw = raw.toUpperCase();
+        const code = raw.trim().toUpperCase();
+        if (code in ukCounts) ukCounts[code]++;
 
-        if (UK_CODES.includes(raw)) {
-            ukCounts[raw]++;
-            counts.GBR = (counts.GBR || 0) + 1;
-        } else {
-            const iso = plotlyCountryMap[raw] || raw;
-            counts[iso] = (counts[iso] || 0) + 1;
-        }
+        const iso = toISO3(code);
+        counts[iso] = (counts[iso] || 0) + 1;
     });
 
     return { counts, ukCounts };
@@ -70,39 +52,35 @@ function renderHeatmap() {
     const men   = countPlayers(menData);
     const women = countPlayers(womenData);
 
-    const allCountries = new Set([
+    const locations = Array.from(new Set([
         ...Object.keys(men.counts),
-                                 ...Object.keys(women.counts)
-    ]);
-    const locations = Array.from(allCountries);
+        ...Object.keys(women.counts)
+    ]));
+
+    const ukBreakdown = (label, ukCounts) =>
+        `<br><b>${label}:</b><br>` +
+        UK_HOME_NATIONS.map(([code, name]) => `- ${name}: ${ukCounts[code]}`).join('<br>') +
+        '<br>';
 
     function buildView(menOn, womenOn) {
         const z = locations.map(code =>
-        (menOn   ? (men.counts[code]   || 0) : 0) +
-        (womenOn ? (women.counts[code] || 0) : 0)
+            (menOn   ? (men.counts[code]   || 0) : 0) +
+            (womenOn ? (women.counts[code] || 0) : 0)
         );
 
         const text = locations.map((code, i) => {
-            const m = men.counts[code]   || 0;
-            const w = women.counts[code] || 0;
             const total = z[i];
+            let body = `<b>${countryName(code)}</b><br>Total: ${total}`;
 
             if (code === "GBR") {
-                const mu = men.ukCounts, wu = women.ukCounts;
-                let body = `<b>United Kingdom</b><br>Total: ${total}<br>`;
-                if (menOn) {
-                    body += `<br><b>Men:</b><br>- England: ${mu.ENG}<br>- Scotland: ${mu.SCO}<br>- Wales: ${mu.WAL}<br>- Northern Ireland: ${mu.NIR}<br>`;
-                }
-                if (womenOn) {
-                    body += `<br><b>Women:</b><br>- England: ${wu.ENG}<br>- Scotland: ${wu.SCO}<br>- Wales: ${wu.WAL}<br>- Northern Ireland: ${wu.NIR}`;
-                }
+                body += "<br>";
+                if (menOn)   body += ukBreakdown("Men",   men.ukCounts);
+                if (womenOn) body += ukBreakdown("Women", women.ukCounts);
                 return body;
             }
 
-            const name = countryNames[code] || code;
-            let body = `<b>${name}</b><br>Total: ${total}`;
             if (menOn && womenOn) {
-                body += `<br>Men: ${m}<br>Women: ${w}`;
+                body += `<br>Men: ${men.counts[code] || 0}<br>Women: ${women.counts[code] || 0}`;
             }
             return body;
         });
@@ -153,11 +131,7 @@ function renderHeatmap() {
         }];
     }
 
-    Plotly.newPlot(mapDiv, makeTrace(views.combined), layout, {
-        responsive: true,
-        displayModeBar: false,
-        scrollZoom: false
-    });
+    Plotly.newPlot(mapDiv, makeTrace(views.combined), layout, PLOTLY_CONFIG);
 
     const tabs = document.querySelectorAll("[data-heatmap-view]");
     tabs.forEach(btn => {
@@ -166,12 +140,7 @@ function renderHeatmap() {
             if (!views[key]) return;
 
             tabs.forEach(b => b.classList.toggle("active", b === btn));
-
-            Plotly.react(mapDiv, makeTrace(views[key]), layout, {
-                responsive: true,
-                displayModeBar: false,
-                scrollZoom: false
-            });
+            Plotly.react(mapDiv, makeTrace(views[key]), layout, PLOTLY_CONFIG);
         });
     });
 }
@@ -180,8 +149,7 @@ function renderHeatmap() {
 
 document.addEventListener("stats-data-ready", renderHeatmap);
 
-/* Fallback: if stats.js already fired before this script loaded
- *  (e.g. cached CSVs resolved synchronously), render immediately. */
+/* Fallback: if stats.js already fired before this script loaded, render now. */
 if (typeof menData !== "undefined" && menData.length > 0) {
     renderHeatmap();
 }
