@@ -1,5 +1,17 @@
 /* Website Style Sheet */
 
+/* Site colours - change them here and every page follows */
+:root {
+    --brand: #274e13;              /* main green: nav bar, headings, table header */
+    --brand-dark: #1a3a0d;         /* hover / active-sort green */
+    --brand-light: #3a6b1a;        /* header borders, active tabs */
+    --brand-tint: #f0f9f5;         /* very light green backgrounds */
+    --brand-tint-strong: #e1f0ea;  /* row hover, update tags */
+    --panel-bg: #f8f9fa;           /* light grey panels */
+    --panel-border: #e0e0e0;       /* panel borders */
+    --rank-color: #115c32;         /* "#1", "#2"... in the stats tables */
+}
+
 /* Reset and base styles */
 * {
     margin: 0;
@@ -44,24 +56,31 @@ body {
 }
 
 /* Sidebar filter panel */
+/* Light grey panels: filter sidebar, recent updates box, contributor cards, contact info */
+.filter-sidebar,
+.last-update,
+.contributors-list li,
+.contact-info {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+}
+
 .filter-sidebar {
     width: 225px;
     flex-shrink: 0;
-    background-color: #f8f9fa;
     border-radius: 8px;
     padding: 15px;
-    border: 1px solid #e0e0e0;
     position: sticky;
     top: 80px;
     height: fit-content;
 }
 
 .filter-sidebar h3 {
-    color: #274e13;
+    color: var(--brand);
     font-size: 16px;
     margin-bottom: 15px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #274e13;
+    border-bottom: 2px solid var(--brand);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -81,7 +100,7 @@ body {
 .filter-group label {
     font-weight: bold;
     font-size: 14px;
-    color: #274e13;
+    color: var(--brand);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -89,7 +108,7 @@ body {
 
 .filter-group label i {
     width: 16px;
-    color: #274e13;
+    color: var(--brand);
 }
 
 .filter-group input, 
@@ -105,7 +124,7 @@ body {
 .filter-group input:focus,
 .filter-group select:focus {
     outline: none;
-    border-color: #274e13;
+    border-color: var(--brand);
     box-shadow: 0 0 0 2px rgba(39, 78, 19, 0.1);
 }
 
@@ -143,9 +162,9 @@ body {
     align-items: center;
     margin-bottom: 15px;
     padding: 10px 12px;
-    background-color: #f8f9fa;
+    background-color: var(--panel-bg);
     border-radius: 5px;
-    border-left: 4px solid #274e13;
+    border-left: 4px solid var(--brand);
 }
 
 .table-info {
@@ -163,7 +182,7 @@ body {
 }
 
 .page-btn {
-    background-color: #274e13;
+    background-color: var(--brand);
     color: white;
     border: none;
     width: 28px;
@@ -182,7 +201,7 @@ body {
 }
 
 .page-btn:hover:not(:disabled) {
-    background-color: #1a3a0d;
+    background-color: var(--brand-dark);
 }
 
 /* Table styles */
@@ -201,7 +220,7 @@ table {
 }
 
 thead {
-    background-color: #274e13;
+    background-color: var(--brand);
     color: white;
 }
 
@@ -209,7 +228,7 @@ thead th {
     padding: 10px 6px;
     text-align: left;
     font-weight: bold;
-    border-right: 1px solid #3a6b1a;
+    border-right: 1px solid var(--brand-light);
 }
 
 thead th:last-child {
@@ -235,12 +254,12 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-    background-color: #e1f0ea;
+    background-color: var(--brand-tint-strong);
 }
 
 /* Navigation Styles */
 .navbar {
-    background-color: #274e13;
+    background-color: var(--brand);
     padding: 0;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: sticky;
@@ -330,11 +349,11 @@ header {
     text-align: center;
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #274e13;
+    border-bottom: 2px solid var(--brand);
 }
 
 header h1 {
-    color: #274e13;
+    color: var(--brand);
     font-size: 16px;
     margin-bottom: 5px;
 }
@@ -355,7 +374,7 @@ footer p {
 
 #lastUpdate {
     font-weight: bold;
-    color: #274e13;
+    color: var(--brand);
 }
 
 /* About page specific */
@@ -370,7 +389,7 @@ footer p {
 }
 
 .about-section h2 {
-    color: #274e13;
+    color: var(--brand);
     font-size: 16px;
     margin-bottom: 10px;
     padding-bottom: 5px;
@@ -407,7 +426,7 @@ footer p {
         left: -100%;
         top: 60px;
         flex-direction: column;
-        background-color: #274e13;
+        background-color: var(--brand);
         width: 100%;
         text-align: center;
         transition: 0.3s;
@@ -489,9 +508,6 @@ footer p {
 
 /* Styling for the New Recent Updates Section */
 .last-update {
-    align-items: center;
-    background-color: #f8f9fa;
-    border: 1px solid #e0e0e0;
     border-radius: 6px;
     padding: 15px;
     margin-top: 15px;
@@ -510,7 +526,7 @@ footer p {
 
 .recent-updates-title {
     font-weight: bold;
-    color: #274e13;
+    color: var(--brand);
 }
 
 .recent-updates-header .pagination-controls {
@@ -544,7 +560,7 @@ footer p {
 }
 
 .recent-updates-list li:hover {
-    background-color: #f0f9f5;
+    background-color: var(--brand-tint);
 }
 
 .recent-updates-list .update-details {
@@ -553,8 +569,8 @@ footer p {
 }
 
 .recent-updates-list .update-tag {
-    background-color: #e1f0ea;
-    color: #274e13;
+    background-color: var(--brand-tint-strong);
+    color: var(--brand);
     padding: 2px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -583,9 +599,7 @@ footer p {
 .contributors-list li {
     padding: 10px 12px;
     margin-bottom: 8px;
-    background-color: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    border-left: 4px solid #274e13; /* Brand green accent bar on the left */
+    border-left: 4px solid var(--brand); /* Brand green accent bar on the left */
     border-radius: 4px;
     font-size: 14px;
     color: #333;
@@ -593,12 +607,12 @@ footer p {
 }
 
 .contributors-list li:hover {
-    background-color: #f0f9f5;
+    background-color: var(--brand-tint);
 }
 
 .contributor-name {
     font-weight: 700;
-    color: #274e13;
+    color: var(--brand);
 }
 
 .contributor-loc {
@@ -607,13 +621,13 @@ footer p {
 }
 
 .contributor-loc i {
-    color: #274e13;
+    color: var(--brand);
     font-size: 11px;
     margin-right: 2px;
 }
 
 .contributors-list a {
-    color: #274e13;
+    color: var(--brand);
     text-decoration: none;
     font-weight: 600;
     margin-left: 4px;
@@ -628,7 +642,7 @@ td:nth-child(13) {
     text-align: right;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
-    color: #274e13;
+    color: var(--brand);
     font-weight: 600;
 }
 
@@ -647,11 +661,11 @@ th.sortable {
 }
 
 th.sortable:hover {
-    background-color: #3a6b1a; /* Slightly lighter green on hover */
+    background-color: var(--brand-light); /* Slightly lighter green on hover */
 }
 
 th.active-sort {
-    background-color: #1a3a0d; /* Darker green when active */
+    background-color: var(--brand-dark); /* Darker green when active */
 }
 
 .sort-icon {
@@ -663,14 +677,26 @@ th.active-sort {
 /* Socials column */
 .social-cell {
     text-align: center;
+    white-space: nowrap;
 }
 
+/* Icon colour is set per link (each platform's brand colour) */
 .social-cell a {
     display: inline-block;
+    text-decoration: none;
+    margin-right: 6px;
+    font-size: 16px;
     transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
 .social-cell a:hover {
     transform: scale(1.2);
     opacity: 0.8;
+}
+
+/* "No players found matching your filters" row */
+.no-results {
+    text-align: center;
+    padding: 20px;
+    color: #666;
 }

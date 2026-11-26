@@ -11,7 +11,7 @@
 }
 
 .contact-header h1 {
-    color: #274e13;
+    color: var(--brand);
     font-size: 28px;
     margin-bottom: 10px;
 }
@@ -30,15 +30,13 @@
 .contact-info {
     flex: 1;
     min-width: 240px;
-    background: #f8f9fa;
     padding: 20px;
     border-radius: 12px;
-    border: 1px solid #e0e0e0;
     height: fit-content;
 }
 
 .contact-info h3 {
-    color: #274e13;
+    color: var(--brand);
     margin-bottom: 15px;
     font-size: 20px;
     border-left: 4px solid #f5b042;
@@ -55,7 +53,7 @@
 
 .info-item i {
     width: 30px;
-    color: #274e13;
+    color: var(--brand);
     font-size: 18px;
 }
 
@@ -66,7 +64,7 @@
 }
 
 .info-item a {
-    color: #274e13;
+    color: var(--brand);
     text-decoration: none;
 }
 

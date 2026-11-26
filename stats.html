@@ -93,7 +93,7 @@
         </div>
 
         <!-- SECOND ROW: Geographic Distribution Heatmap (full width) -->
-        <div class="full-width-row" style="margin-top: 40px;">
+        <div class="full-width-row space-above-lg">
             <div class="stats-section grid-col">
                 <h2 class="section-title">Geographic Distribution of Players</h2>
 
@@ -108,7 +108,7 @@
         </div>
 
         <!-- THIRD ROW: Countries Represented & Top 5 Countries Tables (3 Columns)-->
-        <div class="stats-row three-col-row" style="margin-top: 20px;">
+        <div class="stats-row three-col-row space-above">
 
                 <!-- Column 1: Countries Represented (Vertically Stacked Cards) -->
                 <div class="stats-section grid-col grid-col-narrow stack-section">
@@ -128,14 +128,14 @@
             </div>
 
             <!-- Column 2: Men's Top 5 Table -->
-            <div class="stats-table-container compact-table-wrapper grid-col" style="margin: 0;">
+            <div class="stats-table-container compact-table-wrapper grid-col">
                 <h2 class="section-title">Men: Top 5 Countries</h2>
                 <table class="stats-table compact-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px; text-align: center;">Rank</th>
+                            <th class="col-rank">Rank</th>
                             <th>Country</th>
-                            <th style="text-align: right; width: 80px;">Players</th>
+                            <th>Players</th>
                         </tr>
                     </thead>
                     <tbody id="menTopCountriesBody">
@@ -145,14 +145,14 @@
             </div>
 
             <!-- Column 3: Women's Top 5 Table -->
-            <div class="stats-table-container compact-table-wrapper grid-col" style="margin: 0;">
+            <div class="stats-table-container compact-table-wrapper grid-col">
                 <h2 class="section-title">Women: Top 5 Countries</h2>
                 <table class="stats-table compact-table">
                     <thead>
                         <tr>
-                            <th style="width: 50px; text-align: center;">Rank</th>
+                            <th class="col-rank">Rank</th>
                             <th>Country</th>
-                            <th style="text-align: right; width: 80px;">Players</th>
+                            <th>Players</th>
                         </tr>
                     </thead>
                     <tbody id="womenTopCountriesBody">
@@ -164,7 +164,7 @@
 
 
                 <!-- NEW ROW: Bangladesh NT Leaders (Top Caps & Goals) -->
-        <div class="stats-row two-col-row" style="margin-top: 20px;">
+        <div class="stats-row two-col-row space-above">
 
             <!-- Column 1: Men's Bangladesh NT Leaders -->
             <div class="stats-section grid-col-half">
@@ -173,14 +173,14 @@
                     <button class="leaderboard-tab active" data-tab="appearances">Caps</button>
                     <button class="leaderboard-tab" data-tab="goals">Goals</button>
                 </div>
-                <div class="stats-table-container compact-table-wrapper" style="margin: 0;">
+                <div class="stats-table-container compact-table-wrapper">
                     <table class="stats-table compact-table">
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;">#</th>
+                                <th class="col-rank-narrow">#</th>
                                 <th>Player</th>
-                                <th style="text-align: center; width: 60px;">Caps</th>
-                                <th style="text-align: center; width: 60px;">Goals</th>
+                                <th class="col-stat">Caps</th>
+                                <th class="col-stat">Goals</th>
                             </tr>
                         </thead>
                         <tbody id="menLeaderboardBody">
@@ -197,14 +197,14 @@
                     <button class="leaderboard-tab active" data-tab="appearances">Caps</button>
                     <button class="leaderboard-tab" data-tab="goals">Goals</button>
                 </div>
-                <div class="stats-table-container compact-table-wrapper" style="margin: 0;">
+                <div class="stats-table-container compact-table-wrapper">
                     <table class="stats-table compact-table">
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;">#</th>
+                                <th class="col-rank-narrow">#</th>
                                 <th>Player</th>
-                                <th style="text-align: center; width: 60px;">Caps</th>
-                                <th style="text-align: center; width: 60px;">Goals</th>
+                                <th class="col-stat">Caps</th>
+                                <th class="col-stat">Goals</th>
                             </tr>
                         </thead>
                         <tbody id="womenLeaderboardBody">
@@ -216,7 +216,7 @@
         </div>
 
         <!-- FOURTH ROW: Position Statistics Table (Stays Centered at Bottom) -->
-        <div class="stats-table-container" style="margin-top: 40px; margin-bottom: 40px;">
+        <div class="stats-table-container space-above-lg space-below-lg">
             <h2 class="section-title">Players by Position</h2>
 
             <table class="stats-table">

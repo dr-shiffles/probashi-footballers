@@ -1,35 +1,34 @@
+/* Statistics page styles. Colours come from the variables in style.css. */
+
 /* ==========================================================================
- *  Stat Cards & Grid Layouts (Sizing Override)
+ *  Stat Cards
  *  ========================================================================== */
 
-/* This layout standardizes the grid so cards across all rows stay the exact same width */
+/* Row of cards; cards share the space evenly */
 .summary-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 20px;
-    justify-content: space-between; /* Evenly distributes spacing if they don't grow */
+    justify-content: space-between;
 }
 
-/* Force every single stat card to have the exact same physical size constraints */
 .stat-card {
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    background: linear-gradient(135deg, var(--panel-bg) 0%, #ffffff 100%);
     border: 1px solid #ddd;
     border-radius: 6px;
     padding: 12px 8px;
     text-align: center;
     box-shadow: 0 2px 3px rgba(0,0,0,0.1);
-    border-left: 3px solid #274e13;
-
-    /* UPDATED: Flexible sizing to evenly distribute inside the column */
-    flex: 1 1 0px;            /* Distributes available space 100% evenly */
-    min-width: 90px;          /* Prevents them from getting too squished */
-    box-sizing: border-box;   /* Includes padding in the width calculation */
+    border-left: 3px solid var(--brand);
+    flex: 1 1 0px;            /* every card gets an equal share */
+    min-width: 90px;          /* but never gets too squished */
+    box-sizing: border-box;
 }
 
 .stat-card h3 {
-    color: #274e13;
-    font-size: 11px;          /* Match callups header font size */
+    color: var(--brand);
+    font-size: 11px;
     margin-top: 0;
     margin-bottom: 5px;
     text-transform: uppercase;
@@ -53,64 +52,65 @@
 }
 
 /* ==========================================================================
- *  Layout Structures (3-Column Grid & Full Width)
+ *  Page Layout: rows (max 1200px wide) and columns
  *  ========================================================================== */
 
-/* Defines a row structure containing 3 columns side-by-side */
-.three-col-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Evenly spaces the 3 columns */
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;              /* Strictly enforces the 1200px max width */
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 25px;
-    box-sizing: border-box;
-}
-
-/* Full-width row for the heatmap to ensure it spans perfectly */
+.three-col-row,
+.two-col-row,
 .full-width-row {
     width: 100%;
-    max-width: 1200px;              /* Matches the 1200px max width of 3-col rows */
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 25px;
     box-sizing: border-box;
 }
 
-/* Individual columns inside a 3-column row */
-.grid-col {
-    flex: 1 1 0px;                  /* Ensures all normal columns start with the exact same base size */
-    min-width: 280px;               /* Forces wrap on narrower screens */
-    max-width: 480px;               /* Allows columns 2 & 3 to grow and absorb the remaining space of a 1200px row */
+.three-col-row,
+.two-col-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Columns start equal and wrap below 280px */
+.grid-col,
+.grid-col-half {
+    flex: 1 1 0px;
+    min-width: 280px;
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Ensure the grid-col inside the full-width-row expands fully */
+.grid-col {
+    max-width: 480px;
+}
+
+.grid-col-half {
+    max-width: 585px;   /* (1200 - 20 gap) / 2 = 590, rounded down */
+}
+
+/* The heatmap's column fills its whole row */
 .full-width-row .grid-col {
     max-width: 100%;
     width: 100%;
 }
 
-/* Specialized narrow column modifier for "Countries Represented" */
-.grid-col-narrow {
-    flex: 0 0 200px !important;     /* Forces the column to be exactly 200px on large screens */
-    width: 200px !important;
-    min-width: 200px !important;    /* Overrides the 280px min-width inheritance */
-    max-width: 200px !important;    /* Overrides the base column max-width */
-    box-sizing: border-box;
+/* "Countries Represented": a fixed 200px column on large screens */
+.grid-col.grid-col-narrow {
+    flex: 0 0 200px;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
 }
 
-/* Forces vertical stacking inside Column 1 (Countries Represented) */
 .stack-section {
     display: flex;
     flex-direction: column;
 }
 
-/* Keep the vertical stack container organized without stretching the cards */
+/* Cards stacked on top of each other inside the narrow column */
 .vertical-stack {
     display: flex;
     flex-direction: column;
@@ -118,44 +118,33 @@
     margin-bottom: 0;
 }
 
-/* UPDATED: Vertically stacked cards should fill the full width of their 200px column */
-.vertical-card {
-    margin: 0 !important;
-    width: 100% !important;
-    flex: 1 1 auto !important;
-}
-
-/* Reset specialized column grids so standard flex behavior handles the child widths */
-.three-cards {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 12px !important;
-}
-
-.three-cards .stat-card {
-    flex: 1 1 0px !important;
+.stat-card.vertical-card {
+    margin: 0;
+    width: 100%;
+    flex: 1 1 auto;
 }
 
 /* ==========================================================================
- *  Table Specific Styles
+ *  Tables
  *  ========================================================================== */
 
-/* General stats table wrapper (e.g. Positions Table at the bottom) */
+/* Wrapper for the full-width Positions table */
 .stats-table-container {
     background-color: white;
     margin-bottom: 20px;
     width: 100%;
-    max-width: 1200px;             /* Enforces matching 1200px alignment for the bottom table */
+    max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
     overflow-x: auto;
 }
 
-/* Top 5 list wrappers now follow the grid column width exactly */
+/* Wrapper for the Top 5 and Leaderboard tables inside a column */
 .compact-table-wrapper {
     background-color: transparent;
     border-radius: 6px;
     width: 100%;
+    margin: 0;
 }
 
 .stats-table {
@@ -166,7 +155,7 @@
 }
 
 .stats-table th {
-    background-color: #274e13;
+    background-color: var(--brand);
     color: white;
     padding: 10px;
     text-align: left;
@@ -199,25 +188,61 @@
     border-bottom: none;
 }
 
-/* Compact overrides target top-5 countries list spacing only */
-.compact-table th,
-.compact-table td {
-    padding: 6px 10px !important;
-    font-size: 14px !important;
+/* Header cells: rank ("#") and number columns */
+.stats-table th.col-rank {
+    width: 50px;
+    text-align: center;
 }
 
-.compact-table th:nth-child(2),
-.compact-table td:nth-child(2) {
-    text-align: left !important;
-    width: auto !important;
-    white-space: normal !important;
+.stats-table th.col-rank-narrow {
+    width: 40px;
+    text-align: center;
 }
 
-.compact-table th:nth-child(3),
-.compact-table td:nth-child(3) {
-    text-align: right !important;
-    width: 80px !important;
-    white-space: nowrap !important;
+.stats-table th.col-stat {
+    width: 60px;
+    text-align: center;
+}
+
+/* Compact tables (Top 5, Leaderboards): tighter spacing,
+   name in column 2 on the left, count in column 3 on the right */
+.stats-table.compact-table th,
+.stats-table.compact-table td {
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.stats-table.compact-table th:nth-child(2),
+.stats-table.compact-table td:nth-child(2) {
+    text-align: left;
+    width: auto;
+    white-space: normal;
+}
+
+.stats-table.compact-table th:nth-child(3),
+.stats-table.compact-table td:nth-child(3) {
+    text-align: right;
+    width: 80px;
+    white-space: nowrap;
+}
+
+/* Top 5 Countries rows */
+.stats-table td.top-country-rank {
+    text-align: center;
+    font-weight: bold;
+    width: 60px;
+    color: var(--rank-color);
+}
+
+.top-country-name {
+    font-weight: 500;
+}
+
+/* "No data available" row */
+.empty-cell {
+    text-align: center;
+    padding: 15px;
+    color: #777;
 }
 
 .category-name {
@@ -237,15 +262,15 @@
 
 .loading i {
     font-size: 30px;
-    color: #274e13;
+    color: var(--brand);
     margin-bottom: 8px;
 }
 
 .section-title {
-    color: #274e13;
+    color: var(--brand);
     margin-bottom: 12px;
     font-size: 18px;
-    border-bottom: 2px solid #274e13;
+    border-bottom: 2px solid var(--brand);
     padding-bottom: 4px;
     display: flex;
     align-items: center;
@@ -253,90 +278,157 @@
 }
 
 /* ==========================================================================
- *  Heatmap Specific Styles
+ *  Tabs (heatmap: Combined / Men / Women; leaderboards: Caps / Goals)
  *  ========================================================================== */
 
-.heatmap-tabs {
+.heatmap-tabs,
+.leaderboard-tabs {
     display: flex;
     gap: 4px;
+}
+
+.heatmap-tabs {
     justify-content: center;
     margin-bottom: 12px;
 }
 
-.heatmap-tab {
-    padding: 8px 20px;
+.leaderboard-tabs {
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.heatmap-tab,
+.leaderboard-tab {
     border: 1px solid #b7cdb4;
-    background: #f0f9f5;
-    color: #274e13;
+    background: var(--brand-tint);
+    color: var(--brand);
     font-family: inherit;
-    font-size: 0.95rem;
     font-weight: 700;
     cursor: pointer;
     border-radius: 4px;
     transition: background 0.15s, color 0.15s;
 }
 
-.heatmap-tab:hover {
+.heatmap-tab {
+    padding: 8px 20px;
+    font-size: 0.95rem;
+}
+
+.leaderboard-tab {
+    padding: 6px 16px;
+    font-size: 0.85rem;
+}
+
+.heatmap-tab:hover,
+.leaderboard-tab:hover {
     background: #dcefdc;
 }
 
-.heatmap-tab.active {
-    background: #3a6b1a;
+.heatmap-tab.active,
+.leaderboard-tab.active {
+    background: var(--brand-light);
     color: #fff;
-    border-color: #3a6b1a;
+    border-color: var(--brand-light);
 }
 
 #player-map {
-width: 100%;
-height: 550px;   /* A touch shorter than 700px so it doesn't dominate */
+    width: 100%;
+    height: 550px;
 }
 
 /* ==========================================================================
- *  Responsive Viewport Overrides
+ *  Leaderboards (Bangladesh NT caps / goals)
  *  ========================================================================== */
 
-/* Intermediate Tablet / Desktop Breakpoint */
+.leaderboard-rank {
+    text-align: center;
+    font-weight: bold;
+    color: var(--rank-color);
+    width: 40px;
+}
+
+.leaderboard-player {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+}
+
+/* Club line under the player's name */
+.leaderboard-player small {
+    display: block;
+    font-weight: 400;
+    color: #888;
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+/* Highlight the column the leaderboard is sorted by */
+.leaderboard-highlight {
+    background: #eaf4ea;
+    font-weight: bold;
+}
+
+/* Spacing between rows (kept last so it overrides the margins above) */
+.space-above {
+    margin-top: 20px;
+}
+
+.space-above-lg {
+    margin-top: 40px;
+}
+
+.space-below-lg {
+    margin-bottom: 40px;
+}
+
+/* ==========================================================================
+ *  Tablet (950px and below): columns stack, centred
+ *  ========================================================================== */
+
 @media (max-width: 950px) {
-    .three-col-row {
+    .three-col-row,
+    .two-col-row {
         flex-direction: column;
         align-items: center;
         gap: 20px;
     }
 
-    .grid-col {
+    .grid-col,
+    .grid-col-half {
         width: 100%;
         max-width: 550px;
     }
 
-    /* Convert narrow grid column back to fluid full-width on mobile */
-    .grid-col-narrow {
-        flex: 1 1 auto !important;
-        width: 100% !important;
-        max-width: 550px !important;
-        min-width: 0 !important;
+    .grid-col.grid-col-narrow {
+        flex: 1 1 auto;
+        width: 100%;
+        max-width: 550px;
+        min-width: 0;
     }
 
-    /* Convert stacked cards back to side-by-side when full-screen is collapsed */
+    /* Countries Represented cards go side by side again */
     .vertical-stack {
         flex-direction: row;
     }
 
-    .vertical-card {
-        padding: 12px 10px !important;
+    .stat-card.vertical-card {
+        padding: 12px 10px;
     }
 }
 
-/* Small Device / Mobile Breakpoint */
+/* ==========================================================================
+ *  Mobile (768px and below)
+ *  ========================================================================== */
+
 @media (max-width: 768px) {
     .summary-cards {
-        grid-template-columns: 1fr;
         gap: 10px;
     }
 
-    /* Stack national team callup blocks vertically on mobile */
     .three-cards {
-        grid-template-columns: 1fr !important;
-        gap: 8px !important;
+        gap: 8px;
     }
 
     .vertical-stack {
@@ -355,10 +447,6 @@ height: 550px;   /* A touch shorter than 700px so it doesn't dominate */
         font-size: 20px;
     }
 
-    .stat-label {
-        font-size: 10px;
-    }
-
     .stats-table {
         font-size: 13px;
     }
@@ -369,115 +457,6 @@ height: 550px;   /* A touch shorter than 700px so it doesn't dominate */
         font-size: 12px;
     }
 
-    .stats-table th:first-child,
-    .stats-table td:first-child {
-        white-space: normal;
-    }
-}
-/* ==========================================================================
- *  Leaderboard Section (Top Appearances / Top Scorers)
- *  ========================================================================== */
-
-/* Two-column row layout matching the 1200px max width */
-.two-col-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 25px;
-    box-sizing: border-box;
-}
-
-.grid-col-half {
-    flex: 1 1 0px;
-    min-width: 280px;
-    max-width: 585px;   /* (1200 - 20 gap) / 2 = 590, rounded down */
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Tabs for switching between Appearances / Goals */
-.leaderboard-tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 10px;
-    justify-content: flex-start;
-}
-
-.leaderboard-tab {
-    padding: 6px 16px;
-    border: 1px solid #b7cdb4;
-    background: #f0f9f5;
-    color: #274e13;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
-}
-
-.leaderboard-tab:hover {
-    background: #dcefdc;
-}
-
-.leaderboard-tab.active {
-    background: #3a6b1a;
-    color: #fff;
-    border-color: #3a6b1a;
-}
-
-/* Rank column in leaderboard tables */
-.leaderboard-rank {
-    text-align: center;
-    font-weight: bold;
-    color: #115c32;
-    width: 40px;
-}
-
-/* Player name styling */
-.leaderboard-player {
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 220px;
-}
-
-/* Small secondary line under player name (country) */
-.leaderboard-player small {
-    display: block;
-    font-weight: 400;
-    color: #888;
-    font-size: 11px;
-    line-height: 1.2;
-}
-
-/* Highlight the active sort column */
-.leaderboard-highlight {
-    background: #eaf4ea;
-    font-weight: bold;
-}
-
-/* Responsive: stack the two leaderboard columns on narrower screens */
-@media (max-width: 950px) {
-    .two-col-row {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .grid-col-half {
-        width: 100%;
-        max-width: 550px;
-    }
-}
-
-@media (max-width: 768px) {
     .leaderboard-tab {
         padding: 5px 10px;
         font-size: 0.78rem;

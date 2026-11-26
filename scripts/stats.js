@@ -198,18 +198,16 @@ function renderTopCountriesTable(targetElementId, countryCounts) {
     tableBody.innerHTML = '';
 
     if (sortedCountries.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="3" style="text-align: center; padding: 15px; color: #777;">No data available</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="3" class="empty-cell">No data available</td></tr>`;
         return;
     }
 
     sortedCountries.forEach(([code, count], index) => {
         const row = document.createElement('tr');
         row.innerHTML = `
-        <td style="text-align: center; font-weight: bold; width: 60px; color: #115c32;">#${index + 1}</td>
-        <td class="category-name" style="font-weight: 500;">
-        ${countryName(code)}
-        </td>
-        <td class="number-cell" style="font-weight: bold; text-align: right;">${count.toLocaleString()}</td>
+        <td class="top-country-rank">#${index + 1}</td>
+        <td class="top-country-name">${countryName(code)}</td>
+        <td class="number-cell">${count.toLocaleString()}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -258,7 +256,7 @@ function renderLeaderboard(tbodyId, data, sortBy, limit = 10) {
     tbody.innerHTML = '';
 
     if (board.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:15px;color:#777;">No Bangladesh NT data available</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-cell">No Bangladesh NT data available</td></tr>`;
         return;
     }
 
