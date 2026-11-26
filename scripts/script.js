@@ -403,12 +403,28 @@ function parseDateFromCSV(dateStr) {
         }
     }
 
+    // YYYY-MM-DD: build a local date. (new Date('2026-11-22') would be midnight UTC,
+    // which is still 11/21 in the Americas.)
+    const isoMatch = dateStr.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (isoMatch) {
+        const date = new Date(+isoMatch[1], +isoMatch[2] - 1, +isoMatch[3]);
+        return isNaN(date.getTime()) ? null : date;
+    }
+
     const fallbackDate = new Date(dateStr);
     return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
 }
 
-// "Most Recently Added/Updated Players": every player updated on (or closest to)
-// this page's last database update date.
+// How many players the "Most Recently Added/Updated" list aims to show
+const RECENT_UPDATES_MIN = 10;
+
+// "Most Recently Added/Updated Players":
+//  - every player updated on the most recent update day (on or before this
+//    page's last database update);
+//  - if that's fewer than RECENT_UPDATES_MIN, earlier updates are added,
+//    newest first, until the list has RECENT_UPDATES_MIN players;
+//  - if the most recent day alone has more, all of them are shown and
+//    nothing older is added.
 function displayRecentUpdates() {
     const recentContainer = document.getElementById('recentUpdatesList');
     if (!recentContainer) return;
@@ -432,34 +448,26 @@ function displayRecentUpdates() {
 
     // Normalize a Date to local midnight (day-level comparison)
     const toDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-    const latestDayIn = (pool) => {
-        const maxDay = Math.max(...pool.map(i => toDay(i.parsedDate)));
-        return pool.filter(item => toDay(item.parsedDate) === maxDay);
-    };
 
-    let recentPlayers;
+    // Ignore rows dated after this page's database update (if any remain)
+    let pool = playersWithDates;
     if (lastUpdateDate) {
-        // 1) Players updated on the same day as the database update
-        const targetDay = toDay(lastUpdateDate);
-        recentPlayers = playersWithDates.filter(item => toDay(item.parsedDate) === targetDay);
-
-        // 2) Otherwise, the closest day on or before it
-        if (recentPlayers.length === 0) {
-            const candidates = playersWithDates.filter(
-                item => item.parsedDate.getTime() <= lastUpdateDate.getTime()
-            );
-            recentPlayers = latestDayIn(candidates.length > 0 ? candidates : playersWithDates);
-        }
-    } else {
-        // No update date available: the most recent day in this CSV
-        recentPlayers = latestDayIn(playersWithDates);
+        const onOrBefore = pool.filter(item => toDay(item.parsedDate) <= toDay(lastUpdateDate));
+        if (onOrBefore.length > 0) pool = onOrBefore;
     }
 
     // Newest first, then alphabetical by name
-    recentPlayers.sort((a, b) =>
+    pool.sort((a, b) =>
         (b.parsedDate - a.parsedDate) ||
         getPlayerName(a.data).toLowerCase().localeCompare(getPlayerName(b.data).toLowerCase())
     );
+
+    // Everyone from the most recent update day...
+    const latestDay = toDay(pool[0].parsedDate);
+    const latestDayCount = pool.filter(item => toDay(item.parsedDate) === latestDay).length;
+
+    // ...topped up with earlier updates if that day had fewer than RECENT_UPDATES_MIN
+    const recentPlayers = pool.slice(0, Math.max(latestDayCount, RECENT_UPDATES_MIN));
 
     recentPlayers.forEach(({ data: p }) => {
         const position = p[COL.POSITIONS] || '-';
