@@ -497,6 +497,32 @@ footer p {
     margin-top: 15px;
 }
 
+/* Heading row with the newer/older arrow buttons */
+.recent-updates-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.recent-updates-title {
+    font-weight: bold;
+    color: #274e13;
+}
+
+.recent-updates-header .pagination-controls {
+    font-size: 14px;
+    color: #666;
+}
+
+/* .pagination-controls sets display:flex, which would override the hidden attribute */
+.pagination-controls[hidden] {
+    display: none;
+}
+
 .recent-updates-list {
     list-style: none;
     padding: 0;

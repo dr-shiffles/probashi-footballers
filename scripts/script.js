@@ -332,6 +332,14 @@ function setupEventListeners() {
         }
     });
 
+    // Recent updates arrows: left = newer, right = older
+    const recentPrev = document.getElementById('recentPrev');
+    const recentNext = document.getElementById('recentNext');
+    if (recentPrev && recentNext) {
+        recentPrev.addEventListener('click', () => { recentPage--; renderRecentUpdatesPage(); });
+        recentNext.addEventListener('click', () => { recentPage++; renderRecentUpdatesPage(); });
+    }
+
     document.querySelectorAll('th.sortable').forEach(th => {
         th.addEventListener('click', () => {
             sortData(parseInt(th.getAttribute('data-col')), th.getAttribute('data-type'));
@@ -415,61 +423,80 @@ function parseDateFromCSV(dateStr) {
     return isNaN(fallbackDate.getTime()) ? null : fallbackDate;
 }
 
-// How many players the "Most Recently Added/Updated" list aims to show
-const RECENT_UPDATES_MIN = 10;
+// "Most Recently Added/Updated Players" list size
+const RECENT_UPDATES_MIN = 10;   // aim to list at least this many
+const RECENT_UPDATES_MAX = 20;   // never list more than this
+const RECENT_PAGE_SIZE = 5;      // players per page (arrow buttons move between pages)
 
-// "Most Recently Added/Updated Players":
+let recentUpdates = [];          // the selected players, newest first
+let recentPage = 1;
+
+// Pick the players for the "Most Recently Added/Updated Players" list:
 //  - every player updated on the most recent update day (on or before this
 //    page's last database update);
 //  - if that's fewer than RECENT_UPDATES_MIN, earlier updates are added,
 //    newest first, until the list has RECENT_UPDATES_MIN players;
-//  - if the most recent day alone has more, all of them are shown and
-//    nothing older is added.
+//  - if the most recent day alone has more, all of them are listed and
+//    nothing older is added;
+//  - never more than RECENT_UPDATES_MAX in total.
 function displayRecentUpdates() {
-    const recentContainer = document.getElementById('recentUpdatesList');
-    if (!recentContainer) return;
-
-    recentContainer.innerHTML = '';
-
     let lastUpdateDate = null;
     if (window.recentUpdateDate) {
         const parsed = new Date(window.recentUpdateDate);
         if (!isNaN(parsed.getTime())) lastUpdateDate = parsed;
     }
 
-    const playersWithDates = playersData
+    let pool = playersData
         .map(player => ({ data: player, parsedDate: parseDateFromCSV(player[COL.LAST_UPDATE]) }))
         .filter(item => item.parsedDate !== null);
 
-    if (playersWithDates.length === 0) {
+    recentUpdates = [];
+    recentPage = 1;
+
+    if (pool.length > 0) {
+        // Normalize a Date to local midnight (day-level comparison)
+        const toDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+
+        // Ignore rows dated after this page's database update (if any remain)
+        if (lastUpdateDate) {
+            const onOrBefore = pool.filter(item => toDay(item.parsedDate) <= toDay(lastUpdateDate));
+            if (onOrBefore.length > 0) pool = onOrBefore;
+        }
+
+        // Newest first, then alphabetical by name
+        pool.sort((a, b) =>
+            (b.parsedDate - a.parsedDate) ||
+            getPlayerName(a.data).toLowerCase().localeCompare(getPlayerName(b.data).toLowerCase())
+        );
+
+        // Everyone from the most recent update day, topped up to the minimum, capped at the maximum
+        const latestDay = toDay(pool[0].parsedDate);
+        const latestDayCount = pool.filter(item => toDay(item.parsedDate) === latestDay).length;
+        const count = Math.min(Math.max(latestDayCount, RECENT_UPDATES_MIN), RECENT_UPDATES_MAX);
+
+        recentUpdates = pool.slice(0, count).map(item => item.data);
+    }
+
+    renderRecentUpdatesPage();
+}
+
+// Show the current page of the recent updates list and update the arrow buttons
+function renderRecentUpdatesPage() {
+    const recentContainer = document.getElementById('recentUpdatesList');
+    if (!recentContainer) return;
+
+    const pager = document.getElementById('recentPager');
+    const totalPages = Math.max(1, Math.ceil(recentUpdates.length / RECENT_PAGE_SIZE));
+    recentPage = Math.min(Math.max(recentPage, 1), totalPages);
+
+    recentContainer.innerHTML = '';
+
+    if (recentUpdates.length === 0) {
         recentContainer.innerHTML = '<li>No recent update history found.</li>';
-        return;
     }
 
-    // Normalize a Date to local midnight (day-level comparison)
-    const toDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-
-    // Ignore rows dated after this page's database update (if any remain)
-    let pool = playersWithDates;
-    if (lastUpdateDate) {
-        const onOrBefore = pool.filter(item => toDay(item.parsedDate) <= toDay(lastUpdateDate));
-        if (onOrBefore.length > 0) pool = onOrBefore;
-    }
-
-    // Newest first, then alphabetical by name
-    pool.sort((a, b) =>
-        (b.parsedDate - a.parsedDate) ||
-        getPlayerName(a.data).toLowerCase().localeCompare(getPlayerName(b.data).toLowerCase())
-    );
-
-    // Everyone from the most recent update day...
-    const latestDay = toDay(pool[0].parsedDate);
-    const latestDayCount = pool.filter(item => toDay(item.parsedDate) === latestDay).length;
-
-    // ...topped up with earlier updates if that day had fewer than RECENT_UPDATES_MIN
-    const recentPlayers = pool.slice(0, Math.max(latestDayCount, RECENT_UPDATES_MIN));
-
-    recentPlayers.forEach(({ data: p }) => {
+    const start = (recentPage - 1) * RECENT_PAGE_SIZE;
+    recentUpdates.slice(start, start + RECENT_PAGE_SIZE).forEach(p => {
         const position = p[COL.POSITIONS] || '-';
         const notes = p[COL.NOTES] || 'N/A';
         const marketValue = p[COL.MARKET_VALUE] || '—';
@@ -482,4 +509,12 @@ function displayRecentUpdates() {
         `;
         recentContainer.appendChild(li);
     });
+
+    // Arrows only appear when there is more than one page
+    if (pager) {
+        pager.hidden = totalPages <= 1;
+        document.getElementById('recentPageInfo').textContent = `Page ${recentPage} of ${totalPages}`;
+        document.getElementById('recentPrev').disabled = recentPage <= 1;
+        document.getElementById('recentNext').disabled = recentPage >= totalPages;
+    }
 }
