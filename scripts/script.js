@@ -193,7 +193,7 @@ function renderSocialLinks(rawValue) {
 
         return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer"
         title="${safeLabel}" aria-label="${safeLabel}"
-        style="color:${color}; text-decoration:none; margin-right:6px; font-size:16px;">
+        style="color:${color};">
         <i class="fa-brands ${iconClass}"></i>
         </a>`;
     });
@@ -366,7 +366,6 @@ function updateTable() {
             if (i === COL.SOCIALS) {
                 cell.innerHTML = renderSocialLinks(value);
                 cell.classList.add('social-cell');
-                cell.style.whiteSpace = 'nowrap';
             } else {
                 cell.textContent = value;
             }
@@ -380,7 +379,7 @@ function updateTable() {
     if (filteredData.length > 0) {
         rowCount.textContent = `Showing ${startIndex + 1}-${endIndex} of ${filteredData.length} players`;
     } else {
-        tableBody.innerHTML = `<tr><td colspan="${COL.SORT_KEY}" style="text-align: center; padding: 20px; color: #666;">No players found matching your filters</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="${COL.SORT_KEY}" class="no-results">No players found matching your filters</td></tr>`;
         rowCount.textContent = 'No players found';
     }
 
