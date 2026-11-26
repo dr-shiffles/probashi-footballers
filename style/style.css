@@ -267,10 +267,6 @@ tbody tr:hover {
     gap: 8px;
 }
 
-.nav-brand i {
-    font-size: 22px;
-}
-
 .nav-menu {
     display: flex;
     list-style: none;
@@ -334,18 +330,6 @@ header h1 {
     margin-bottom: 5px;
 }
 
-
-header h1 i {
-    margin-right: 8px;
-}
-
-.tagline {
-    font-size: 12px;
-    color: #000;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
 /* Footer */
 footer {
     text-align: center;
@@ -363,11 +347,6 @@ footer p {
 #lastUpdate {
     font-weight: bold;
     color: #274e13;
-}
-
-#lastUpdateInfo {
-    text-align: center;
-    margin-top: 10px;
 }
 
 /* About page specific */
@@ -406,20 +385,6 @@ footer p {
     line-height: 1.6;
     margin-bottom: 5px;
     color: #444;
-}
-
-.about-highlight {
-    background-color: #f0f9f5;
-    padding: 15px;
-    border-radius: 5px;
-    border-left: 4px solid #274e13;
-    margin: 15px 0;
-}
-
-.about-highlight p {
-    font-size: 16px;
-    color: #274e13;
-    font-weight: bold;
 }
 
 /* Mobile menu and responsive adjustments */
@@ -562,7 +527,7 @@ footer p {
 }
 
 /* Responsiveness for small screens */
-@media (max-width:  ) {
+@media (max-width: 480px) {
     .recent-updates-list li {
         flex-direction: column;
         align-items: flex-start;
@@ -599,12 +564,6 @@ footer p {
 .contributor-name {
     font-weight: 700;
     color: #274e13;
-}
-
-.contributor-role {
-    color: #555;
-    font-style: italic;
-    font-size: 13px;
 }
 
 .contributor-loc {

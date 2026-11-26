@@ -18,7 +18,6 @@ const positionCategories = {
 document.addEventListener('DOMContentLoaded', async () => {
     await loadAllData();
     displayStats();
-    setupMobileMenu();
 });
 
 // Load both CSV files
@@ -321,25 +320,6 @@ function renderTopCountriesTable(targetElementId, countryCounts) {
         <td class="number-cell" style="font-weight: bold; text-align: right;">${count.toLocaleString()}</td>
         `;
         tableBody.appendChild(row);
-    });
-}
-
-
-// Setup mobile menu (copied from main script)
-function setupMobileMenu() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-    }
-
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            navMenu.classList.remove('active');
-        });
     });
 }
 
